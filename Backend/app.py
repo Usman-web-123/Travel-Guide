@@ -8,9 +8,14 @@ import base64
 import hashlib
 from dotenv import load_dotenv
 
-# Load environment variables
-load_dotenv()
-load_dotenv(os.path.join(os.path.dirname(__file__), '..', '.env'))
+# Load environment variables safely
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+    load_dotenv(os.path.join(os.path.dirname(__file__), '..', '.env'))
+except ImportError:
+    print("Warning: python-dotenv package not found. Using system environment variables.")
+
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 MURF_API_KEY = os.getenv("MURF_API_KEY")
