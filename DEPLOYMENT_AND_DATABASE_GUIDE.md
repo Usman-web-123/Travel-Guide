@@ -50,7 +50,9 @@ This guide provides step-by-step instructions to connect your **Travel Guide** a
    - **Root Directory**: *(Leave blank)*
    - **Runtime**: `Python 3`
    - **Build Command**: `pip install -r requirements.txt`
-   - **Start Command**: `gunicorn Backend.app:app`
+   - **Start Command**: `gunicorn --bind 0.0.0.0:$PORT Backend.app:app`
+
+> ⚠️ **IMPORTANT**: Make sure the Start Command includes `--bind 0.0.0.0:$PORT` as shown above so Render can detect port binding!
 
 ### Step 3: Add Environment Variables on Render
 Scroll down to **Environment Variables** and add the following keys:
@@ -60,7 +62,8 @@ Scroll down to **Environment Variables** and add the following keys:
 | `GEMINI_API_KEY` | Your Google Gemini API Key |
 | `MURF_API_KEY` | Your Murf AI API Key |
 | `MONGO_URI` | Your MongoDB Atlas Connection String |
-| `PORT` | `5000` |
+
+> ⚠️ **Note**: Do **NOT** manually set `PORT=5000` in Render environment variables. Render automatically assigns and manages the `PORT` variable.
 
 4. Click **Create Web Service**. Render will automatically build and deploy your backend.
 5. Copy your live Render URL (e.g., `https://travel-guide-backend.onrender.com`).
