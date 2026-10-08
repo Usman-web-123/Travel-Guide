@@ -5,18 +5,39 @@ from flask_cors import CORS
 import tempfile
 import requests
 import base64
-# pyrefly: ignore [missing-import]
+import hashlib
 from dotenv import load_dotenv
 
-# Load environment variables from .env file
+# Load environment variables
 load_dotenv()
 load_dotenv(os.path.join(os.path.dirname(__file__), '..', '.env'))
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 MURF_API_KEY = os.getenv("MURF_API_KEY")
+MONGO_URI = os.getenv("MONGO_URI")
 
 app = Flask(__name__)
 CORS(app)
+
+# --- MongoDB Setup (Optional / Atlas Connection) ---
+db = None
+users_collection = None
+history_collection = None
+
+if MONGO_URI:
+    try:
+        from pymongo import MongoClient
+        mongo_client = MongoClient(MONGO_URI, serverSelectionTimeoutMS=5000)
+        db = mongo_client["travel_guide_db"]
+        users_collection = db["users"]
+        history_collection = db["history"]
+        print("Connected to MongoDB Atlas successfully.")
+    except Exception as e:
+        print(f"MongoDB connection warning: {e}")
+
+# Helper for simple password hashing
+def hash_password(password):
+    return hashlib.sha256(password.encode('utf-8')).hexdigest()
 
 PROMPTS = {
     "Summary": """
@@ -64,13 +85,13 @@ def generate_speech(text, voice_id, locale):
         "Content-Type": "application/json"
     }
     data = {
-    "voice_id": voice_id,
-    "text": text,
-    "locale": locale,
-    "model": "FALCON",
-    "format": "MP3",
-    "sampleRate": 24000,
-    "channelType": "MONO"
+        "voice_id": voice_id,
+        "text": text,
+        "locale": locale,
+        "model": "FALCON",
+        "format": "MP3",
+        "sampleRate": 24000,
+        "channelType": "MONO"
     }
 
     response = requests.post(
@@ -96,6 +117,66 @@ def generate_description(place, answer_type, language):
     )
     return response.text
 
+@app.route("/", methods=["GET"])
+def health_check():
+    return jsonify({
+        "status": "online",
+        "service": "Travel Guide Backend API",
+        "mongo_connected": db is not None
+    })
+
+# --- Authentication Routes ---
+@app.route("/api/signup", methods=["POST"])
+def signup():
+    data = request.json or {}
+    name = data.get("name", "").strip()
+    email = data.get("email", "").strip().lower()
+    password = data.get("password", "")
+
+    if not name or not email or not password:
+        return jsonify({"error": "Please provide name, email, and password."}), 400
+
+    if users_collection is not None:
+        existing_user = users_collection.find_one({"email": email})
+        if existing_user:
+            return jsonify({"error": "Email is already registered."}), 409
+        
+        user_doc = {
+            "name": name,
+            "email": email,
+            "password": hash_password(password)
+        }
+        users_collection.insert_one(user_doc)
+
+    return jsonify({
+        "message": "User registered successfully!",
+        "user": {"name": name, "email": email}
+    }), 201
+
+@app.route("/api/login", methods=["POST"])
+def login():
+    data = request.json or {}
+    email = data.get("email", "").strip().lower()
+    password = data.get("password", "")
+
+    if not email or not password:
+        return jsonify({"error": "Please enter email and password."}), 400
+
+    if users_collection is not None:
+        user = users_collection.find_one({"email": email, "password": hash_password(password)})
+        if not user:
+            return jsonify({"error": "Invalid email or password."}), 401
+        
+        user_name = user.get("name", email.split("@")[0])
+    else:
+        user_name = email.split("@")[0]
+
+    return jsonify({
+        "message": "Login successful!",
+        "user": {"name": user_name, "email": email}
+    }), 200
+
+# --- Audio Guide Route ---
 @app.route("/generate-audio-guide", methods=["POST"])
 def generate_audio_guide():
     data = request.json
@@ -104,12 +185,25 @@ def generate_audio_guide():
     language = data["language"]
     voice_id = data["voiceId"]
     locale = data["locale"]
+    user_email = data.get("userEmail")
 
     text_description = generate_description(place, answer_type, language)
-    audio_path = generate_speech(text_description,voice_id,locale)
+    audio_path = generate_speech(text_description, voice_id, locale)
 
     audio_bytes = open(audio_path.name, "rb").read()
     encoded_audio = base64.b64encode(audio_bytes).decode("utf-8")
+
+    # Save to MongoDB history if available
+    if history_collection is not None and user_email:
+        try:
+            history_collection.insert_one({
+                "userEmail": user_email,
+                "place": place,
+                "language": language,
+                "description": text_description
+            })
+        except Exception as e:
+            print("History save error:", e)
 
     return {
         "description": text_description,

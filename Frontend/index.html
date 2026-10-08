@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Travel Guide</title>
+  <title>Travel Guide - AI Audio Companion</title>
 
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700;800&display=swap"
@@ -86,45 +86,134 @@
 
 <body class="min-h-screen text-gray-800 bg-[#fdfbf7] font-sans selection:bg-[#ff8a1f] selection:text-white">
 
+  <!-- Header & Navigation -->
   <header
-    class="fixed top-0 left-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-gray-100 shadow-sm transition-all">
+    class="fixed top-0 left-0 w-full z-50 bg-white/85 backdrop-blur-md border-b border-gray-100 shadow-sm transition-all">
     <div class="w-full px-6 h-20 flex items-center justify-between">
-      <div class="flex items-center gap-3 shrink-0 cursor-pointer hover:opacity-80 transition-opacity">
-        <div
-          class="w-11 h-11 bg-gradient-to-br from-[#ff8a1f] to-[#ff6a00] rounded-xl flex items-center justify-center shadow-lg shadow-orange-200">
-          <img
-            src="https://s3.ap-south-1.amazonaws.com/new-assets.ccbp.in/frontend/loading-data/niat-course-projects/compass-removebg-preview.png"
-            alt="logo" class="w-6 h-6 object-contain">
-        </div>
-        <div>
-          <div class="font-bold text-lg tracking-tight text-gray-900 leading-none">Travel Guide</div>
-          <div class="hidden sm:block text-[11px] text-gray-500 font-medium tracking-wide mt-1">AI Travel Companion
+      
+      <!-- Top Left: Navigation / Back Button & Logo -->
+      <div class="flex items-center gap-4">
+        <!-- Dynamic Top Left Back Button -->
+        <button id="globalBackBtn"
+          class="hidden px-3.5 py-2 rounded-full border border-gray-200 bg-gray-50 hover:bg-white text-gray-700 text-xs font-semibold hover:border-[#ff8a1f] hover:text-[#ff8a1f] transition-all flex items-center gap-1.5 shadow-sm active:scale-95">
+          <span class="text-base leading-none">←</span>
+          <span>Back</span>
+        </button>
+
+        <div id="brandLogo" class="flex items-center gap-3 shrink-0 cursor-pointer hover:opacity-80 transition-opacity">
+          <div
+            class="w-11 h-11 bg-gradient-to-br from-[#ff8a1f] to-[#ff6a00] rounded-xl flex items-center justify-center shadow-lg shadow-orange-200">
+            <img
+              src="https://s3.ap-south-1.amazonaws.com/new-assets.ccbp.in/frontend/loading-data/niat-course-projects/compass-removebg-preview.png"
+              alt="logo" class="w-6 h-6 object-contain">
+          </div>
+          <div>
+            <div class="font-bold text-lg tracking-tight text-gray-900 leading-none">Travel Guide</div>
+            <div class="hidden sm:block text-[11px] text-gray-500 font-medium tracking-wide mt-1">AI Travel Companion
+            </div>
           </div>
         </div>
       </div>
-      <div class="flex items-center gap-2 flex-1 justify-end max-w-lg ml-6">
-        <div class="relative w-full max-w-[320px] group">
+
+      <!-- Search & Auth Controls -->
+      <div class="flex items-center gap-3 flex-1 justify-end max-w-2xl ml-4">
+        <div class="relative w-full max-w-[280px] sm:max-w-[320px] group hidden sm:block">
           <input id="searchInput" placeholder="Search destination..."
             class="w-full pl-5 pr-12 py-2.5 rounded-full border border-gray-200 bg-gray-50/50 text-sm font-medium focus:bg-white focus:outline-none focus:border-[#ff8a1f] focus:ring-4 focus:ring-orange-50 transition-all duration-300 placeholder-gray-400 group-hover:bg-white group-hover:shadow-sm">
-          <div class="absolute right-4 top-2.5 text-gray-400 pointer-events-none"><svg class="w-5 h-5" fill="none"
-              stroke="currentColor" viewBox="0 0 24 24">
+          <div class="absolute right-4 top-2.5 text-gray-400 pointer-events-none">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-            </svg></div>
+            </svg>
+          </div>
         </div>
+        
         <button id="searchBtn"
-          class="hidden sm:block px-6 py-2.5 rounded-full bg-gray-900 text-white font-semibold text-sm hover:bg-[#ff8a1f] hover:shadow-lg hover:shadow-orange-200 active:scale-95 transition-all duration-300">Explore</button>
+          class="hidden md:block px-5 py-2.5 rounded-full bg-gray-900 text-white font-semibold text-xs uppercase tracking-wider hover:bg-[#ff8a1f] hover:shadow-lg hover:shadow-orange-200 active:scale-95 transition-all duration-300">Explore</button>
+
+        <!-- Auth Navigation Buttons -->
+        <div id="authNavButtons" class="flex items-center gap-2">
+          <button id="openLoginBtn"
+            class="px-4 py-2 rounded-full border border-gray-300 text-gray-700 font-medium text-xs hover:border-[#ff8a1f] hover:text-[#ff8a1f] transition-all">
+            Log In
+          </button>
+          <button id="openSignupBtn"
+            class="px-4 py-2 rounded-full bg-gradient-to-r from-[#ff8a1f] to-[#ff6a00] text-white font-semibold text-xs shadow-md shadow-orange-200 hover:opacity-95 transition-all">
+            Sign Up
+          </button>
+        </div>
+
+        <!-- User Profile Badge (Shown when logged in) -->
+        <div id="userProfileBadge" class="hidden flex items-center gap-3 bg-orange-50 border border-orange-200 px-3 py-1.5 rounded-full">
+          <span id="userNameDisplay" class="text-xs font-bold text-gray-800">👤 User</span>
+          <button id="logoutBtn" class="text-[11px] text-red-500 font-semibold hover:underline">Logout</button>
+        </div>
+
       </div>
     </div>
   </header>
 
-  <section class="pt-32 pb-20 px-6">
+  <!-- LANDING PAGE HERO SECTION -->
+  <section id="landingHero" class="pt-32 pb-16 px-6 bg-gradient-to-b from-orange-50/60 via-[#fdfbf7] to-[#fdfbf7] border-b border-gray-100">
+    <div class="max-w-5xl mx-auto text-center">
+      <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-orange-100/80 border border-orange-200 text-[#ff6a00] text-xs font-bold uppercase tracking-widest mb-6 shadow-sm">
+        <span>✨ Powered by AI & Murf Voice Technology</span>
+      </div>
+      
+      <h1 class="text-4xl sm:text-6xl font-['Playfair_Display',_serif] font-bold text-gray-900 tracking-tight leading-tight mb-6">
+        Immersive Audio Guides for Iconic Destinations
+      </h1>
+      
+      <p class="text-base sm:text-xl text-gray-600 max-w-2xl mx-auto mb-10 leading-relaxed font-normal">
+        Experience history like never before. Generate instant, personalized audio walkthroughs in <strong class="text-gray-900">English, Hindi, Tamil & Telugu</strong> with human-like storytelling.
+      </p>
+
+      <div class="flex flex-wrap items-center justify-center gap-4">
+        <a href="#destinationsSection"
+          class="px-8 py-4 rounded-full bg-gradient-to-r from-[#ff8a1f] to-[#ff6a00] text-white font-bold text-sm shadow-xl shadow-orange-200 hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center gap-2">
+          <span>Explore Destinations</span>
+          <span>↓</span>
+        </a>
+        <button id="heroLoginBtn"
+          class="px-8 py-4 rounded-full bg-white border border-gray-200 text-gray-800 font-bold text-sm shadow-sm hover:border-[#ff8a1f] hover:text-[#ff8a1f] transition-all">
+          Create Free Account
+        </button>
+      </div>
+
+      <!-- Highlights Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-16 text-left max-w-4xl mx-auto">
+        <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-all">
+          <div class="text-2xl mb-2">🗣️</div>
+          <h4 class="font-bold text-gray-900 text-base mb-1">4 Native Languages</h4>
+          <p class="text-xs text-gray-500 leading-relaxed">Listen in English, Hindi, Tamil, or Telugu with realistic voice accents.</p>
+        </div>
+        <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-all">
+          <div class="text-2xl mb-2">⚡</div>
+          <h4 class="font-bold text-gray-900 text-base mb-1">Summary or Detailed</h4>
+          <p class="text-xs text-gray-500 leading-relaxed">Choose quick 1-minute summaries or in-depth 3-minute historical stories.</p>
+        </div>
+        <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-all">
+          <div class="text-2xl mb-2">📜</div>
+          <h4 class="font-bold text-gray-900 text-base mb-1">Interactive Transcripts</h4>
+          <p class="text-xs text-gray-500 leading-relaxed">Follow along with full text transcripts synced alongside high-quality audio.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DESTINATIONS & EXPERIENCE SECTION -->
+  <section id="destinationsSection" class="py-16 px-6">
     <div class="max-w-7xl mx-auto">
+
+      <div class="text-center mb-12">
+        <span class="text-xs font-bold uppercase tracking-widest text-[#ff8a1f]">Popular Destinations</span>
+        <h2 class="text-3xl sm:text-4xl font-['Playfair_Display',_serif] font-bold text-gray-900 mt-1">Select a Landmark</h2>
+      </div>
 
       <div id="desktopBackContainer" class="hidden w-full mx-auto mb-6 pl-1"></div>
 
       <div
-        class="cards cards-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 w-full mx-auto min-h-[600px] relative
+        class="cards cards-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 w-full mx-auto min-h-[500px] relative
                 lg:[&.faded]:flex-row lg:[&.faded]:items-start lg:[&.faded]:justify-center lg:[&.faded]:gap-[60px] lg:[&.faded]:pt-10">
 
         <div class="place-card bg-white rounded-[2rem] overflow-hidden border border-gray-100 cursor-pointer hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:border-orange-100 group relative
@@ -368,6 +457,60 @@
       </div>
     </div>
   </section>
+
+  <!-- LOGIN / SIGNUP MODAL -->
+  <div id="authModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+    <div class="bg-white rounded-[2rem] max-w-md w-full p-8 shadow-2xl relative border border-gray-100 animate-in fade-in zoom-in duration-200">
+      
+      <!-- Top Left Back Button inside Modal -->
+      <button id="modalBackBtn" class="absolute top-6 left-6 text-gray-400 hover:text-gray-900 transition-colors flex items-center gap-1.5 text-xs font-bold">
+        <span>←</span>
+        <span>Back</span>
+      </button>
+
+      <!-- Close (X) Button -->
+      <button id="modalCloseBtn" class="absolute top-6 right-6 text-gray-400 hover:text-gray-900 text-xl font-bold">✕</button>
+
+      <div class="mt-4 text-center">
+        <h3 id="authModalTitle" class="text-2xl font-['Playfair_Display',_serif] font-bold text-gray-900">Welcome Back</h3>
+        <p id="authModalSub" class="text-xs text-gray-500 mt-1">Sign in to save custom guides & preferences</p>
+      </div>
+
+      <!-- Auth Tabs -->
+      <div class="flex border-b border-gray-100 my-6">
+        <button id="tabLogin" class="flex-1 py-3 text-center text-sm font-bold border-b-2 border-[#ff8a1f] text-[#ff8a1f]">Log In</button>
+        <button id="tabSignup" class="flex-1 py-3 text-center text-sm font-bold border-b-2 border-transparent text-gray-400 hover:text-gray-700">Sign Up</button>
+      </div>
+
+      <!-- Auth Form -->
+      <form id="authForm" class="space-y-4">
+        <div id="nameGroup" class="hidden">
+          <label class="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-1">Full Name</label>
+          <input type="text" id="authName" placeholder="John Doe"
+            class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-[#ff8a1f]">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-1">Email Address</label>
+          <input type="email" id="authEmail" required placeholder="user@example.com"
+            class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-[#ff8a1f]">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold uppercase tracking-wider text-gray-500 mb-1">Password</label>
+          <input type="password" id="authPassword" required placeholder="••••••••"
+            class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-[#ff8a1f]">
+        </div>
+
+        <div id="authAlert" class="hidden text-xs text-center py-2 px-3 rounded-lg"></div>
+
+        <button type="submit" id="authSubmitBtn"
+          class="w-full py-3.5 bg-gradient-to-r from-[#ff8a1f] to-[#ff6a00] text-white rounded-xl font-bold text-sm shadow-lg shadow-orange-200 hover:opacity-95 transition-all">
+          Log In
+        </button>
+      </form>
+    </div>
+  </div>
 
   <script src="index.js"></script>
 </body>
