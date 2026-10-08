@@ -16,7 +16,7 @@ const LOCALES = {
 // Dynamic API URL for local & production deployment
 const API_BASE_URL = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" 
   ? "http://127.0.0.1:5000" 
-  : ""; // On Vercel / Render production, empty string will use relative backend or env configured API URL
+  : "https://travel-guide-0jho.onrender.com";
 
 // --- State ---
 const state = {
@@ -27,6 +27,23 @@ const state = {
   currentView: 'landing', // 'landing', 'destination', 'auth'
   currentUser: JSON.parse(localStorage.getItem('travel_user') || 'null')
 };
+
+// --- Helper for Safe Fetch ---
+async function safeFetchJson(url, options = {}) {
+  const res = await fetch(url, options);
+  const contentType = res.headers.get("content-type") || "";
+  
+  if (!contentType.includes("application/json")) {
+    const text = await res.text();
+    throw new Error(text || `Server returned non-JSON status ${res.status}`);
+  }
+  
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.error || `Request failed with status ${res.status}`);
+  }
+  return data;
+}
 
 // --- DOM Elements ---
 const globalBackBtn = document.getElementById('globalBackBtn');
@@ -214,17 +231,11 @@ authForm.addEventListener('submit', async (e) => {
   };
 
   try {
-    const res = await fetch(`${API_BASE_URL}${endpoint}`, {
+    const data = await safeFetchJson(`${API_BASE_URL}${endpoint}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
-
-    const data = await res.json();
-
-    if (!res.ok) {
-      throw new Error(data.error || 'Authentication failed');
-    }
 
     state.currentUser = data.user;
     localStorage.setItem('travel_user', JSON.stringify(data.user));
@@ -308,7 +319,7 @@ generateButton.addEventListener('click', async () => {
     const selectedLanguage = languageSelect.value;
     const selectedVoice = state.voice;
 
-    const response = await fetch(`${API_BASE_URL}/generate-audio-guide`, {
+    const data = await safeFetchJson(`${API_BASE_URL}/generate-audio-guide`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -320,10 +331,6 @@ generateButton.addEventListener('click', async () => {
         userEmail: state.currentUser ? state.currentUser.email : null
       })
     });
-
-    if (!response.ok) throw new Error('Generation failed');
-
-    const data = await response.json();
 
     // Update UI with Result
     transcriptText.textContent = data.description;
@@ -341,7 +348,7 @@ generateButton.addEventListener('click', async () => {
 
   } catch (err) {
     console.error(err);
-    alert('Generation failed. Please check your connection or backend server.');
+    alert(`Generation Notice: ${err.message}`);
     generateButton.textContent = 'Generate Audio Guide';
     generateButton.disabled = false;
   }
