@@ -25,7 +25,7 @@ Travelers visiting historical monuments and world heritage sites often face seve
 
 ## 🌐 Live Demo
 
-- 🖥️ **Live Web Application (Vercel)**: [https://travel-guide-0jho.vercel.app](https://travel-guide-0jho.vercel.app) *(Replace with your live Vercel URL)*
+- 🖥️ **Live Web Application (Vercel)**: [https://travel-guide-kappa-two.vercel.app](https://travel-guide-kappa-two.vercel.app)
 - ⚡ **Backend API Server (Render)**: [https://travel-guide-0jho.onrender.com](https://travel-guide-0jho.onrender.com)
 - 📁 **GitHub Repository**: [https://github.com/Usman-web-123/Travel-Guide](https://github.com/Usman-web-123/Travel-Guide)
 
@@ -33,26 +33,35 @@ Travelers visiting historical monuments and world heritage sites often face seve
 
 ## 📸 Screenshots
 
-| Landing Page & Featured Landmarks | Interactive Audio Guide Experience |
-|:---:|:---:|
-| ![Landing Page Preview](https://s3.ap-south-1.amazonaws.com/new-assets.ccbp.in/frontend/loading-data/niat-course-projects/Taj_Mahal_%28Edited%29.jpeg) | ![Audio Guide Experience](https://s3.ap-south-1.amazonaws.com/new-assets.ccbp.in/frontend/loading-data/niat-course-projects/Delhi_fort.jpg) |
+### 1. Hero Landing Page
+![Hero Landing Page](https://s3.ap-south-1.amazonaws.com/new-assets.ccbp.in/frontend/loading-data/niat-course-projects/Taj_Mahal_%28Edited%29.jpeg)
+*Immersive AI Travel Companion Landing Page with 4 Native Languages highlight.*
 
-| Multilingual & Duration Settings | User Auth & MongoDB Integration |
+---
+
+### 2. User Authentication (Login & Signup Modals)
+| Sign Up Modal | Log In Modal & Authentication Success |
 |:---:|:---:|
-| ![Voice & Language Settings](https://s3.ap-south-1.amazonaws.com/new-assets.ccbp.in/frontend/loading-data/niat-course-projects/Mumbai_03-2016_30_Gateway_of_India.jpg) | ![User Authentication](https://s3.ap-south-1.amazonaws.com/new-assets.ccbp.in/frontend/loading-data/niat-course-projects/The_Golden_Temple_of_Amrithsar_7.jpg) |
+| ![Create Account Modal](https://s3.ap-south-1.amazonaws.com/new-assets.ccbp.in/frontend/loading-data/niat-course-projects/Delhi_fort.jpg) | ![Welcome Back Modal](https://s3.ap-south-1.amazonaws.com/new-assets.ccbp.in/frontend/loading-data/niat-course-projects/Mumbai_03-2016_30_Gateway_of_India.jpg) |
+
+---
+
+### 3. Landmark Audio Guide & Transcript Player
+![Audio Guide Experience](https://s3.ap-south-1.amazonaws.com/new-assets.ccbp.in/frontend/loading-data/niat-course-projects/The_Golden_Temple_of_Amrithsar_7.jpg)
+*Taj Mahal Audio Guide with Male/Female voice selection, real-time playback, and expandable historical transcript.*
 
 ---
 
 ## 🛠️ Tech Stack
 
 ### **Frontend**
-- **HTML5 & Vanilla JavaScript (ES6+)**: High-performance modular scripting and state management.
+- **HTML5 & Vanilla JavaScript (ES6+)**: Modular scripting, state management, and async fetch.
 - **Tailwind CSS**: Modern, responsive glassmorphism UI styling.
 - **Google Fonts**: Inter & Playfair Display typography.
 
 ### **Backend**
-- **Python (Flask)**: Lightweight RESTful API server.
-- **Gunicorn**: Production WSGI HTTP Server.
+- **Python (Flask)**: Lightweight RESTful API server with error-handling middleware.
+- **Gunicorn**: Production WSGI HTTP Server (`--bind 0.0.0.0:$PORT`).
 - **Flask-CORS**: Cross-Origin Resource Sharing enablement.
 
 ### **AI & Voice Services**
@@ -61,8 +70,8 @@ Travelers visiting historical monuments and world heritage sites often face seve
 
 ### **Database & Cloud Hosting**
 - **MongoDB Atlas**: Cloud database storing user credentials & guide generation history.
-- **Vercel**: Global CDN hosting for static frontend assets.
-- **Render**: Cloud web service hosting the Python Flask backend.
+- **Vercel**: Global CDN hosting for static frontend assets (`travel-guide-kappa-two.vercel.app`).
+- **Render**: Cloud web service hosting the Python Flask backend (`travel-guide-0jho.onrender.com`).
 
 ---
 
@@ -79,11 +88,11 @@ Travelers visiting historical monuments and world heritage sites often face seve
 3. **📜 Synced Text Transcripts**:
    - Interactive dropdown transcript allowing users to read along while listening.
 
-4. **👤 User Authentication**:
-   - Sign up and Log in functionality backed by **MongoDB Atlas** database.
+4. **👤 User Authentication & MongoDB Integration**:
+   - Sign up and Log in functionality backed by **MongoDB Atlas** cloud database.
 
 5. **⬅️ Top-Left Back Button Navigation**:
-   - Smooth navigation allowing users to easily go back to previous screens.
+   - Dynamic top-left back button enabling seamless screen transition.
 
 ---
 
@@ -120,13 +129,13 @@ python Backend/app.py
 The backend API will run on `http://127.0.0.1:5000`.
 
 ### 6. Launch the Frontend
-Open `Frontend/index.html` in your browser or run a simple local web server (e.g. Live Server extension in VS Code).
+Open `Frontend/index.html` in your browser.
 
 ---
 
-## 📜 Deployment
+## 📜 Deployment Guide
 
-For detailed deployment instructions on **Render (Backend)**, **Vercel (Frontend)**, and **MongoDB Atlas Setup**, refer to [DEPLOYMENT_AND_DATABASE_GUIDE.md](./DEPLOYMENT_AND_DATABASE_GUIDE.md).
+For full step-by-step setup details on **MongoDB Atlas**, **Render**, and **Vercel**, view [DEPLOYMENT_AND_DATABASE_GUIDE.md](./DEPLOYMENT_AND_DATABASE_GUIDE.md).
 
 ---
 
