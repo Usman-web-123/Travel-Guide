@@ -1,0 +1,24 @@
+# Secrets & Environment variables (DO NOT COMMIT TO GITHUB)
+.env
+.env.local
+Backend/.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+
+# Temporary audio files
+*.mp3
+*.tmp
+
+# Operating System & IDE Files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
