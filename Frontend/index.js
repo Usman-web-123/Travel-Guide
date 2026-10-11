@@ -90,6 +90,10 @@ async function safeFetchJson(targetUrlOrEndpoint, options = {}) {
 const globalBackBtn = document.getElementById('globalBackBtn');
 const brandLogo = document.getElementById('brandLogo');
 const landingHero = document.getElementById('landingHero');
+const howItWorksSection = document.getElementById('howItWorksSection');
+const destinationsPreviewSection = document.getElementById('destinationsPreviewSection');
+const featuresSection = document.getElementById('featuresSection');
+const faqSection = document.getElementById('faqSection');
 const destinationsSection = document.getElementById('destinationsSection');
 const cardsContainer = document.querySelector('.cards');
 const experiencePanel = document.getElementById('experience');
@@ -244,28 +248,39 @@ if (brandLogo) {
 
 // --- Functions ---
 function updateAuthUI() {
+  const landingSections = [
+    landingHero,
+    howItWorksSection,
+    destinationsPreviewSection,
+    featuresSection,
+    faqSection
+  ];
+
   if (state.currentUser) {
-    // Authenticated user state
+    // Authenticated user state:
+    // Hide marketing landing sections so user is directly in the Destinations App
+    landingSections.forEach(sec => { if (sec) sec.classList.add('hidden'); });
+
+    // Show destinations and search
+    if (destinationsSection) destinationsSection.classList.remove('hidden');
+    if (headerSearchGroup) headerSearchGroup.classList.remove('hidden');
+
     authNavButtons.classList.add('hidden');
     userProfileBadge.classList.remove('hidden');
     userNameDisplay.textContent = `👤 ${state.currentUser.name || 'User'}`;
-
-    if (headerSearchGroup) headerSearchGroup.classList.remove('hidden');
-    if (destinationsSection) destinationsSection.classList.remove('hidden');
-
-    if (landingAuthCard) landingAuthCard.classList.add('hidden');
-    if (landingWelcomeCard) {
-      landingWelcomeCard.classList.remove('hidden');
-      if (welcomeUserName) welcomeUserName.textContent = state.currentUser.name || 'Traveler';
-    }
   } else {
-    // Guest (unauthenticated) state: Landing page with auth hero and destinations are displayed; guide panel is hidden
+    // Guest (unauthenticated) state:
+    // Show landing page from Hero strictly till FAQs
+    landingSections.forEach(sec => { if (sec) sec.classList.remove('hidden'); });
+
+    // Remove / hide all content after FAQs
+    if (destinationsSection) destinationsSection.classList.add('hidden');
+    if (experiencePanel) experiencePanel.classList.add('hidden');
+    if (headerSearchGroup) headerSearchGroup.classList.add('hidden');
+    if (globalBackBtn) globalBackBtn.classList.add('hidden');
+
     authNavButtons.classList.remove('hidden');
     userProfileBadge.classList.add('hidden');
-
-    if (headerSearchGroup) headerSearchGroup.classList.remove('hidden');
-    if (destinationsSection) destinationsSection.classList.remove('hidden');
-    if (experiencePanel) experiencePanel.classList.add('hidden');
 
     if (landingAuthCard) landingAuthCard.classList.remove('hidden');
     if (landingWelcomeCard) landingWelcomeCard.classList.add('hidden');
