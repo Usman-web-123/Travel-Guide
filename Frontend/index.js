@@ -34,7 +34,8 @@ const state = {
   length: 'Summary',
   voice: 'Male',
   currentView: 'landing', // 'landing', 'destination', 'auth'
-  currentUser: JSON.parse(localStorage.getItem('travel_user') || 'null')
+  currentUser: JSON.parse(localStorage.getItem('travel_user') || 'null'),
+  pendingDestination: null // Stores landmark clicked before authentication
 };
 
 // --- Helper for Safe Fetch with Automatic Endpoint Fallback ---
@@ -258,12 +259,12 @@ function updateAuthUI() {
       if (welcomeUserName) welcomeUserName.textContent = state.currentUser.name || 'Traveler';
     }
   } else {
-    // Guest (unauthenticated) state: ONLY landing page with login/signup is visible; destinations are hidden
+    // Guest (unauthenticated) state: Landing page with auth hero and destinations are displayed; guide panel is hidden
     authNavButtons.classList.remove('hidden');
     userProfileBadge.classList.add('hidden');
 
-    if (headerSearchGroup) headerSearchGroup.classList.add('hidden');
-    if (destinationsSection) destinationsSection.classList.add('hidden');
+    if (headerSearchGroup) headerSearchGroup.classList.remove('hidden');
+    if (destinationsSection) destinationsSection.classList.remove('hidden');
     if (experiencePanel) experiencePanel.classList.add('hidden');
 
     if (landingAuthCard) landingAuthCard.classList.remove('hidden');
@@ -272,6 +273,13 @@ function updateAuthUI() {
 }
 
 function selectDestination(place, image, clickedCard = null, pushHistory = true) {
+  // Gating requirement: Visitor MUST be logged in or signed up to enter the audio guide page!
+  if (!state.currentUser) {
+    state.pendingDestination = { place, image, clickedCard };
+    openAuthModal('signup', true, `Please sign in or create an account to open the audio guide for ${place}.`);
+    return;
+  }
+
   state.place = place;
   state.image = image;
 
@@ -335,10 +343,17 @@ function deselectDestination(updateHistory = false) {
 }
 
 // --- Auth Modal Control ---
-function openAuthModal(mode = 'login', pushHistory = true) {
+function openAuthModal(mode = 'login', pushHistory = true, customNotice = null) {
   authMode = mode;
   authModal.classList.remove('hidden');
-  authAlert.classList.add('hidden');
+  
+  if (customNotice) {
+    authAlert.textContent = customNotice;
+    authAlert.className = 'text-xs text-center py-2.5 px-3 rounded-xl bg-orange-50 text-[#ff6a00] border border-orange-200 font-semibold mb-3 block';
+    authAlert.classList.remove('hidden');
+  } else {
+    authAlert.classList.add('hidden');
+  }
   
   if (mode === 'login') {
     tabLogin.classList.add('border-[#ff8a1f]', 'text-[#ff8a1f]');
@@ -347,7 +362,7 @@ function openAuthModal(mode = 'login', pushHistory = true) {
     tabSignup.classList.add('border-transparent', 'text-gray-400');
     nameGroup.classList.add('hidden');
     authModalTitle.textContent = 'Welcome Back';
-    authModalSub.textContent = 'Sign in to save custom guides & preferences';
+    authModalSub.textContent = 'Sign in to access your AI audio guide';
     authSubmitBtn.textContent = 'Log In';
   } else {
     tabSignup.classList.add('border-[#ff8a1f]', 'text-[#ff8a1f]');
@@ -356,8 +371,8 @@ function openAuthModal(mode = 'login', pushHistory = true) {
     tabLogin.classList.add('border-transparent', 'text-gray-400');
     nameGroup.classList.remove('hidden');
     authModalTitle.textContent = 'Create an Account';
-    authModalSub.textContent = 'Join Travel Guide to explore AI audio guides';
-    authSubmitBtn.textContent = 'Sign Up';
+    authModalSub.textContent = 'Sign up to unlock the complete AI audio guide';
+    authSubmitBtn.textContent = 'Sign Up & Continue';
   }
 
   if (pushHistory) {
@@ -367,6 +382,7 @@ function openAuthModal(mode = 'login', pushHistory = true) {
 
 function closeAuthModal() {
   authModal.classList.add('hidden');
+  if (authAlert) authAlert.classList.add('hidden');
 }
 
 // Shared Authentication Executor (handles both Landing page form & Modal form)
@@ -396,12 +412,23 @@ async function executeAuth(mode, name, email, password, alertElem, submitBtn) {
     updateAuthUI();
     closeAuthModal();
 
-    // Smoothly reveal and scroll down to the destinations section
-    setTimeout(() => {
-      if (destinationsSection) {
-        destinationsSection.scrollIntoView({ behavior: 'smooth' });
-      }
-    }, 250);
+    // If client clicked a destination before logging in or signing up, launch the guide page now!
+    if (state.pendingDestination) {
+      const pending = state.pendingDestination;
+      state.pendingDestination = null;
+      setTimeout(() => {
+        selectDestination(pending.place, pending.image, pending.clickedCard);
+        if (experiencePanel) {
+          experiencePanel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }, 300);
+    } else {
+      setTimeout(() => {
+        if (destinationsSection) {
+          destinationsSection.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 250);
+    }
 
     return data;
   } catch (err) {
@@ -607,14 +634,23 @@ function performSearch() {
     return place.includes(lowerQuery) || location.includes(lowerQuery);
   });
 
+  const targetPlace = foundCard ? foundCard.dataset.place : query;
+  const targetImage = foundCard ? foundCard.dataset.image : "https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=800&q=80";
+
+  // Require auth to open guide for searched destination
+  if (!state.currentUser) {
+    state.pendingDestination = { place: targetPlace, image: targetImage, clickedCard: foundCard || null };
+    openAuthModal('signup', true, `Please sign in or create an account to open the audio guide for "${targetPlace}".`);
+    return;
+  }
+
   if (foundCard) {
     foundCard.style.display = '';
     selectDestination(foundCard.dataset.place, foundCard.dataset.image, foundCard);
     destinationsSection.scrollIntoView({ behavior: 'smooth' });
   } else {
     // Dynamic preview for any searched world landmark
-    const fallbackImage = "https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=800&q=80";
-    selectDestination(query, fallbackImage);
+    selectDestination(query, targetImage);
     destinationsSection.scrollIntoView({ behavior: 'smooth' });
   }
 }
@@ -731,8 +767,11 @@ window.addEventListener('DOMContentLoaded', () => {
       const slug = (c.dataset.place || '').toLowerCase().replace(/[^a-z0-9]+/g, '-');
       return slug === cleanHash || (c.dataset.place || '').toLowerCase() === cleanHash;
     });
-    if (matched) {
+    // ONLY open destination guide if user is logged in; otherwise remain on landing page
+    if (matched && state.currentUser) {
       selectDestination(matched.dataset.place, matched.dataset.image, matched, false);
+    } else {
+      deselectDestination(false);
     }
   } else if (hash === '#auth') {
     openAuthModal('login', false);
@@ -760,9 +799,8 @@ document.querySelectorAll('.faq-toggle').forEach(btn => {
 // Preview Section CTA Buttons & Cards
 document.querySelectorAll('.preview-cta-btn').forEach(btn => {
   btn.addEventListener('click', () => {
-    if (!state.currentUser && landingAuthCard) {
-      setLandingAuthMode('signup');
-      landingAuthCard.scrollIntoView({ behavior: 'smooth' });
+    if (!state.currentUser) {
+      openAuthModal('signup', true, 'Create a free account to unlock all 28 worldwide audio guides.');
     } else if (destinationsSection) {
       destinationsSection.scrollIntoView({ behavior: 'smooth' });
     }
@@ -771,11 +809,16 @@ document.querySelectorAll('.preview-cta-btn').forEach(btn => {
 
 document.querySelectorAll('.preview-card').forEach(card => {
   card.addEventListener('click', () => {
-    if (!state.currentUser && landingAuthCard) {
-      setLandingAuthMode('signup');
-      landingAuthCard.scrollIntoView({ behavior: 'smooth' });
-    } else if (destinationsSection) {
-      destinationsSection.scrollIntoView({ behavior: 'smooth' });
+    const title = card.querySelector('h4')?.textContent?.trim() || '';
+    const img = card.querySelector('img')?.src || '';
+    const fullCards = Array.from(document.querySelectorAll('.place-card:not(.search-preview-card)'));
+    const matchedCard = fullCards.find(c => (c.dataset.place || '').toLowerCase() === title.toLowerCase());
+
+    if (!state.currentUser) {
+      state.pendingDestination = { place: title, image: img, clickedCard: matchedCard || null };
+      openAuthModal('signup', true, `Please sign in or create an account to open the audio guide for ${title}.`);
+    } else {
+      selectDestination(title, img, matchedCard || null);
     }
   });
 });
