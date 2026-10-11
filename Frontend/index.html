@@ -30,6 +30,7 @@
       transform: translateZ(0);
       -webkit-mask-image: -webkit-radial-gradient(white, black);
       max-width: 340px;
+      width: 100%;
     }
 
     .cards-grid.faded {
@@ -41,11 +42,11 @@
     }
 
     .cards-grid.faded .place-card {
-      display: none;
+      display: none !important;
     }
 
     .cards-grid.faded .place-card.active {
-      display: block;
+      display: block !important;
       width: 100%;
       max-width: 360px;
       cursor: default;
@@ -205,150 +206,684 @@
   <section id="destinationsSection" class="py-16 px-6">
     <div class="max-w-7xl mx-auto">
 
-      <div class="text-center mb-12">
-        <span class="text-xs font-bold uppercase tracking-widest text-[#ff8a1f]">Popular Destinations</span>
-        <h2 class="text-3xl sm:text-4xl font-['Playfair_Display',_serif] font-bold text-gray-900 mt-1">Select a Landmark</h2>
+      <div class="text-center mb-8">
+        <span class="text-xs font-bold uppercase tracking-widest text-[#ff8a1f]">Explore The Globe</span>
+        <h2 class="text-3xl sm:text-4xl font-['Playfair_Display',_serif] font-bold text-gray-900 mt-1">Iconic World Destinations</h2>
+        <p class="text-sm text-gray-500 max-w-xl mx-auto mt-2">Discover 28 handpicked architectural wonders and natural spectacles across Europe, Asia, Americas, Africa, and Oceania.</p>
+      </div>
+
+      <!-- Continent & Category Filter Tabs -->
+      <div id="categoryFilters" class="flex flex-wrap items-center justify-center gap-2 sm:gap-2.5 mb-10 max-w-5xl mx-auto px-2">
+        <button class="filter-tab active px-4 py-2 rounded-full text-xs font-bold transition-all bg-[#ff8a1f] text-white shadow-md shadow-orange-200" data-filter="all">
+          🌍 All (28)
+        </button>
+        <button class="filter-tab px-4 py-2 rounded-full text-xs font-bold transition-all bg-white text-gray-600 border border-gray-200 hover:border-[#ff8a1f] hover:text-[#ff8a1f]" data-filter="wonders">
+          ✨ Wonders of the World
+        </button>
+        <button class="filter-tab px-4 py-2 rounded-full text-xs font-bold transition-all bg-white text-gray-600 border border-gray-200 hover:border-[#ff8a1f] hover:text-[#ff8a1f]" data-filter="europe">
+          🏰 Europe
+        </button>
+        <button class="filter-tab px-4 py-2 rounded-full text-xs font-bold transition-all bg-white text-gray-600 border border-gray-200 hover:border-[#ff8a1f] hover:text-[#ff8a1f]" data-filter="asia">
+          ⛩️ Asia
+        </button>
+        <button class="filter-tab px-4 py-2 rounded-full text-xs font-bold transition-all bg-white text-gray-600 border border-gray-200 hover:border-[#ff8a1f] hover:text-[#ff8a1f]" data-filter="americas">
+          🗽 Americas
+        </button>
+        <button class="filter-tab px-4 py-2 rounded-full text-xs font-bold transition-all bg-white text-gray-600 border border-gray-200 hover:border-[#ff8a1f] hover:text-[#ff8a1f]" data-filter="africa-middle-east">
+          🐪 Africa & Middle East
+        </button>
+        <button class="filter-tab px-4 py-2 rounded-full text-xs font-bold transition-all bg-white text-gray-600 border border-gray-200 hover:border-[#ff8a1f] hover:text-[#ff8a1f]" data-filter="oceania">
+          🦘 Oceania
+        </button>
       </div>
 
       <div id="desktopBackContainer" class="hidden w-full mx-auto mb-6 pl-1"></div>
 
       <div
-        class="cards cards-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 w-full mx-auto min-h-[500px] relative
+        class="cards cards-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 w-full mx-auto min-h-[500px] relative justify-items-center
                 lg:[&.faded]:flex-row lg:[&.faded]:items-start lg:[&.faded]:justify-center lg:[&.faded]:gap-[60px] lg:[&.faded]:pt-10">
 
-        <div class="place-card bg-white rounded-[2rem] overflow-hidden border border-gray-100 cursor-pointer hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:border-orange-100 group relative
-                  lg:[&.active]:w-[480px] lg:[&.active]:max-w-none" data-place="Taj Mahal"
-          data-image="https://s3.ap-south-1.amazonaws.com/new-assets.ccbp.in/frontend/loading-data/niat-course-projects/Taj_Mahal_%28Edited%29.jpeg">
+        <!-- 1. Taj Mahal -->
+        <div class="place-card bg-white rounded-[2rem] overflow-hidden border border-gray-100 cursor-pointer hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:border-orange-100 group relative lg:[&.active]:w-[480px] lg:[&.active]:max-w-none"
+          data-place="Taj Mahal"
+          data-category="asia wonders"
+          data-location="Agra, India"
+          data-image="https://images.unsplash.com/photo-1564507592333-c60657eea523?auto=format&fit=crop&w=800&q=80">
           <div class="overflow-hidden h-[200px] relative">
-            <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500 z-10">
-            </div>
-            <img src="https://s3.ap-south-1.amazonaws.com/new-assets.ccbp.in/frontend/loading-data/niat-course-projects/Taj_Mahal_%28Edited%29.jpeg" alt="Taj Mahal"
-              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-            <div
-              class="absolute top-4 left-4 z-20 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase text-gray-800 shadow-sm">
-              Agra</div>
+            <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500 z-10"></div>
+            <img src="https://images.unsplash.com/photo-1564507592333-c60657eea523?auto=format&fit=crop&w=800&q=80" alt="Taj Mahal"
+              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy">
+            <div class="absolute top-4 left-4 z-20 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase text-gray-800 shadow-sm location-badge">
+              Agra, India</div>
+            <div class="absolute top-4 right-4 z-20 bg-orange-500/90 backdrop-blur-sm px-2.5 py-0.5 rounded-full text-[9px] font-bold tracking-wider uppercase text-white shadow-sm">
+              Asia</div>
           </div>
           <div class="p-6">
             <span class="text-[11px] text-[#ff8a1f] font-bold uppercase tracking-widest">World Wonder</span>
-            <h3
-              class="mt-2 mb-1 text-xl font-['Playfair_Display',_serif] font-bold text-gray-900 group-hover:text-[#ff8a1f] transition-colors">
+            <h3 class="mt-2 mb-1 text-xl font-['Playfair_Display',_serif] font-bold text-gray-900 group-hover:text-[#ff8a1f] transition-colors">
               Taj Mahal</h3>
-            <p class="text-sm text-gray-500 line-clamp-2 leading-relaxed">An immense mausoleum of white marble, built in
-              Agra between 1631 and 1648.</p>
+            <p class="text-sm text-gray-500 line-clamp-2 leading-relaxed">An immense ivory-white marble mausoleum on the Yamuna River, immortalized as an eternal monument of love.</p>
           </div>
         </div>
 
-        <div class="place-card bg-white rounded-[2rem] overflow-hidden border border-gray-100 cursor-pointer hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:border-orange-100 group relative
-                  lg:[&.active]:w-[480px] lg:[&.active]:max-w-none" data-place="Red Fort"
-          data-image="https://s3.ap-south-1.amazonaws.com/new-assets.ccbp.in/frontend/loading-data/niat-course-projects/Delhi_fort.jpg">
+        <!-- 2. Eiffel Tower -->
+        <div class="place-card bg-white rounded-[2rem] overflow-hidden border border-gray-100 cursor-pointer hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:border-orange-100 group relative lg:[&.active]:w-[480px] lg:[&.active]:max-w-none"
+          data-place="Eiffel Tower"
+          data-category="europe wonders"
+          data-location="Paris, France"
+          data-image="https://images.unsplash.com/photo-1511739001486-6bfe10ce785f?auto=format&fit=crop&w=800&q=80">
           <div class="overflow-hidden h-[200px] relative">
-            <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500 z-10">
-            </div>
-            <img src="https://s3.ap-south-1.amazonaws.com/new-assets.ccbp.in/frontend/loading-data/niat-course-projects/Delhi_fort.jpg" alt="Red Fort"
-              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-            <div
-              class="absolute top-4 left-4 z-20 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase text-gray-800 shadow-sm">
-              New Delhi</div>
+            <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500 z-10"></div>
+            <img src="https://images.unsplash.com/photo-1511739001486-6bfe10ce785f?auto=format&fit=crop&w=800&q=80" alt="Eiffel Tower"
+              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy">
+            <div class="absolute top-4 left-4 z-20 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase text-gray-800 shadow-sm location-badge">
+              Paris, France</div>
+            <div class="absolute top-4 right-4 z-20 bg-blue-600/90 backdrop-blur-sm px-2.5 py-0.5 rounded-full text-[9px] font-bold tracking-wider uppercase text-white shadow-sm">
+              Europe</div>
           </div>
           <div class="p-6">
-            <span class="text-[11px] text-[#ff8a1f] font-bold uppercase tracking-widest">Historical Fort</span>
-            <h3
-              class="mt-2 mb-1 text-xl font-['Playfair_Display',_serif] font-bold text-gray-900 group-hover:text-[#ff8a1f] transition-colors">
-              Red Fort</h3>
-            <p class="text-sm text-gray-500 line-clamp-2 leading-relaxed">A historic fort in the city of Delhi in India
-              that served as the main residence of the Mughal Emperors.</p>
+            <span class="text-[11px] text-[#ff8a1f] font-bold uppercase tracking-widest">Iconic Landmark</span>
+            <h3 class="mt-2 mb-1 text-xl font-['Playfair_Display',_serif] font-bold text-gray-900 group-hover:text-[#ff8a1f] transition-colors">
+              Eiffel Tower</h3>
+            <p class="text-sm text-gray-500 line-clamp-2 leading-relaxed">Gustave Eiffel's 330-meter wrought-iron lattice masterpiece soaring over the Champ de Mars in Paris.</p>
           </div>
         </div>
 
-        <div class="place-card bg-white rounded-[2rem] overflow-hidden border border-gray-100 cursor-pointer hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:border-orange-100 group relative
-                  lg:[&.active]:w-[480px] lg:[&.active]:max-w-none" data-place="Gateway of India"
-          data-image="https://s3.ap-south-1.amazonaws.com/new-assets.ccbp.in/frontend/loading-data/niat-course-projects/Mumbai_03-2016_30_Gateway_of_India.jpg">
+        <!-- 3. Colosseum -->
+        <div class="place-card bg-white rounded-[2rem] overflow-hidden border border-gray-100 cursor-pointer hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:border-orange-100 group relative lg:[&.active]:w-[480px] lg:[&.active]:max-w-none"
+          data-place="Colosseum"
+          data-category="europe wonders"
+          data-location="Rome, Italy"
+          data-image="https://images.unsplash.com/photo-1552832230-c0197dd311b5?auto=format&fit=crop&w=800&q=80">
           <div class="overflow-hidden h-[200px] relative">
-            <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500 z-10">
-            </div>
-            <img src="https://s3.ap-south-1.amazonaws.com/new-assets.ccbp.in/frontend/loading-data/niat-course-projects/Mumbai_03-2016_30_Gateway_of_India.jpg"
-              alt="Gateway of India"
-              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-            <div
-              class="absolute top-4 left-4 z-20 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase text-gray-800 shadow-sm">
-              Mumbai</div>
+            <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500 z-10"></div>
+            <img src="https://images.unsplash.com/photo-1552832230-c0197dd311b5?auto=format&fit=crop&w=800&q=80" alt="Colosseum"
+              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy">
+            <div class="absolute top-4 left-4 z-20 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase text-gray-800 shadow-sm location-badge">
+              Rome, Italy</div>
+            <div class="absolute top-4 right-4 z-20 bg-blue-600/90 backdrop-blur-sm px-2.5 py-0.5 rounded-full text-[9px] font-bold tracking-wider uppercase text-white shadow-sm">
+              Europe</div>
           </div>
           <div class="p-6">
-            <span class="text-[11px] text-[#ff8a1f] font-bold uppercase tracking-widest">Monument</span>
-            <h3
-              class="mt-2 mb-1 text-xl font-['Playfair_Display',_serif] font-bold text-gray-900 group-hover:text-[#ff8a1f] transition-colors">
-              Gateway of India</h3>
-            <p class="text-sm text-gray-500 line-clamp-2 leading-relaxed">An arch-monument built during the 20th century
-              in Bombay, India.</p>
+            <span class="text-[11px] text-[#ff8a1f] font-bold uppercase tracking-widest">Ancient Wonder</span>
+            <h3 class="mt-2 mb-1 text-xl font-['Playfair_Display',_serif] font-bold text-gray-900 group-hover:text-[#ff8a1f] transition-colors">
+              Colosseum</h3>
+            <p class="text-sm text-gray-500 line-clamp-2 leading-relaxed">The monumental Flavian Amphitheatre of Imperial Rome that hosted legendary gladiatorial contests.</p>
           </div>
         </div>
 
-        <div class="place-card bg-white rounded-[2rem] overflow-hidden border border-gray-100 cursor-pointer hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:border-orange-100 group relative
-                  lg:[&.active]:w-[480px] lg:[&.active]:max-w-none" data-place="Hawa Mahal"
-          data-image="https://s3.ap-south-1.amazonaws.com/new-assets.ccbp.in/frontend/loading-data/niat-course-projects/East_facade_Hawa_Mahal_Jaipur_from_ground_level_%28July_2022%29_-_img_01.jpg">
+        <!-- 4. Pyramids of Giza -->
+        <div class="place-card bg-white rounded-[2rem] overflow-hidden border border-gray-100 cursor-pointer hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:border-orange-100 group relative lg:[&.active]:w-[480px] lg:[&.active]:max-w-none"
+          data-place="Pyramids of Giza"
+          data-category="africa-middle-east wonders"
+          data-location="Cairo, Egypt"
+          data-image="https://images.unsplash.com/photo-1503177119275-0aa32b3a9368?auto=format&fit=crop&w=800&q=80">
           <div class="overflow-hidden h-[200px] relative">
-            <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500 z-10">
-            </div>
-            <img
-              src="https://s3.ap-south-1.amazonaws.com/new-assets.ccbp.in/frontend/loading-data/niat-course-projects/East_facade_Hawa_Mahal_Jaipur_from_ground_level_%28July_2022%29_-_img_01.jpg"
-              alt="Hawa Mahal"
-              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-            <div
-              class="absolute top-4 left-4 z-20 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase text-gray-800 shadow-sm">
-              Jaipur</div>
+            <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500 z-10"></div>
+            <img src="https://images.unsplash.com/photo-1503177119275-0aa32b3a9368?auto=format&fit=crop&w=800&q=80" alt="Pyramids of Giza"
+              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy">
+            <div class="absolute top-4 left-4 z-20 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase text-gray-800 shadow-sm location-badge">
+              Cairo, Egypt</div>
+            <div class="absolute top-4 right-4 z-20 bg-amber-600/90 backdrop-blur-sm px-2.5 py-0.5 rounded-full text-[9px] font-bold tracking-wider uppercase text-white shadow-sm">
+              Africa</div>
           </div>
           <div class="p-6">
-            <span class="text-[11px] text-[#ff8a1f] font-bold uppercase tracking-widest">Architecture</span>
-            <h3
-              class="mt-2 mb-1 text-xl font-['Playfair_Display',_serif] font-bold text-gray-900 group-hover:text-[#ff8a1f] transition-colors">
-              Hawa Mahal</h3>
-            <p class="text-sm text-gray-500 line-clamp-2 leading-relaxed">The 'Palace of Winds', a palace in Jaipur,
-              India, made with the red and pink sandstone.</p>
+            <span class="text-[11px] text-[#ff8a1f] font-bold uppercase tracking-widest">Ancient Wonder</span>
+            <h3 class="mt-2 mb-1 text-xl font-['Playfair_Display',_serif] font-bold text-gray-900 group-hover:text-[#ff8a1f] transition-colors">
+              Pyramids of Giza</h3>
+            <p class="text-sm text-gray-500 line-clamp-2 leading-relaxed">The oldest and only surviving wonder of the ancient world, guarded by the Great Sphinx across millennia.</p>
           </div>
         </div>
 
-        <div class="place-card bg-white rounded-[2rem] overflow-hidden border border-gray-100 cursor-pointer hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:border-orange-100 group relative
-                  lg:[&.active]:w-[480px] lg:[&.active]:max-w-none" data-place="Golden Temple"
+        <!-- 5. Machu Picchu -->
+        <div class="place-card bg-white rounded-[2rem] overflow-hidden border border-gray-100 cursor-pointer hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:border-orange-100 group relative lg:[&.active]:w-[480px] lg:[&.active]:max-w-none"
+          data-place="Machu Picchu"
+          data-category="americas wonders"
+          data-location="Cusco, Peru"
+          data-image="https://images.unsplash.com/photo-1526392060635-9d6019884377?auto=format&fit=crop&w=800&q=80">
+          <div class="overflow-hidden h-[200px] relative">
+            <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500 z-10"></div>
+            <img src="https://images.unsplash.com/photo-1526392060635-9d6019884377?auto=format&fit=crop&w=800&q=80" alt="Machu Picchu"
+              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy">
+            <div class="absolute top-4 left-4 z-20 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase text-gray-800 shadow-sm location-badge">
+              Cusco, Peru</div>
+            <div class="absolute top-4 right-4 z-20 bg-emerald-600/90 backdrop-blur-sm px-2.5 py-0.5 rounded-full text-[9px] font-bold tracking-wider uppercase text-white shadow-sm">
+              Americas</div>
+          </div>
+          <div class="p-6">
+            <span class="text-[11px] text-[#ff8a1f] font-bold uppercase tracking-widest">World Wonder</span>
+            <h3 class="mt-2 mb-1 text-xl font-['Playfair_Display',_serif] font-bold text-gray-900 group-hover:text-[#ff8a1f] transition-colors">
+              Machu Picchu</h3>
+            <p class="text-sm text-gray-500 line-clamp-2 leading-relaxed">The mystical 15th-century Inca citadel built high in the Peruvian Andes above dramatic cloud forests.</p>
+          </div>
+        </div>
+
+        <!-- 6. Great Wall of China -->
+        <div class="place-card bg-white rounded-[2rem] overflow-hidden border border-gray-100 cursor-pointer hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:border-orange-100 group relative lg:[&.active]:w-[480px] lg:[&.active]:max-w-none"
+          data-place="Great Wall of China"
+          data-category="asia wonders"
+          data-location="Beijing, China"
+          data-image="https://images.unsplash.com/photo-1508804185872-d7badad00f7d?auto=format&fit=crop&w=800&q=80">
+          <div class="overflow-hidden h-[200px] relative">
+            <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500 z-10"></div>
+            <img src="https://images.unsplash.com/photo-1508804185872-d7badad00f7d?auto=format&fit=crop&w=800&q=80" alt="Great Wall of China"
+              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy">
+            <div class="absolute top-4 left-4 z-20 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase text-gray-800 shadow-sm location-badge">
+              Beijing, China</div>
+            <div class="absolute top-4 right-4 z-20 bg-orange-500/90 backdrop-blur-sm px-2.5 py-0.5 rounded-full text-[9px] font-bold tracking-wider uppercase text-white shadow-sm">
+              Asia</div>
+          </div>
+          <div class="p-6">
+            <span class="text-[11px] text-[#ff8a1f] font-bold uppercase tracking-widest">World Wonder</span>
+            <h3 class="mt-2 mb-1 text-xl font-['Playfair_Display',_serif] font-bold text-gray-900 group-hover:text-[#ff8a1f] transition-colors">
+              Great Wall of China</h3>
+            <p class="text-sm text-gray-500 line-clamp-2 leading-relaxed">A series of monumental fortifications spanning thousands of miles across northern China's mountain peaks.</p>
+          </div>
+        </div>
+
+        <!-- 7. Statue of Liberty -->
+        <div class="place-card bg-white rounded-[2rem] overflow-hidden border border-gray-100 cursor-pointer hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:border-orange-100 group relative lg:[&.active]:w-[480px] lg:[&.active]:max-w-none"
+          data-place="Statue of Liberty"
+          data-category="americas"
+          data-location="New York, USA"
+          data-image="https://images.unsplash.com/photo-1605130284535-11dd9eedc58a?auto=format&fit=crop&w=800&q=80">
+          <div class="overflow-hidden h-[200px] relative">
+            <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500 z-10"></div>
+            <img src="https://images.unsplash.com/photo-1605130284535-11dd9eedc58a?auto=format&fit=crop&w=800&q=80" alt="Statue of Liberty"
+              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy">
+            <div class="absolute top-4 left-4 z-20 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase text-gray-800 shadow-sm location-badge">
+              New York, USA</div>
+            <div class="absolute top-4 right-4 z-20 bg-emerald-600/90 backdrop-blur-sm px-2.5 py-0.5 rounded-full text-[9px] font-bold tracking-wider uppercase text-white shadow-sm">
+              Americas</div>
+          </div>
+          <div class="p-6">
+            <span class="text-[11px] text-[#ff8a1f] font-bold uppercase tracking-widest">Liberty & Hope</span>
+            <h3 class="mt-2 mb-1 text-xl font-['Playfair_Display',_serif] font-bold text-gray-900 group-hover:text-[#ff8a1f] transition-colors">
+              Statue of Liberty</h3>
+            <p class="text-sm text-gray-500 line-clamp-2 leading-relaxed">Frédéric Bartholdi's colossal neoclassical copper statue welcoming generations of travelers into New York Harbor.</p>
+          </div>
+        </div>
+
+        <!-- 8. Petra -->
+        <div class="place-card bg-white rounded-[2rem] overflow-hidden border border-gray-100 cursor-pointer hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:border-orange-100 group relative lg:[&.active]:w-[480px] lg:[&.active]:max-w-none"
+          data-place="Petra"
+          data-category="africa-middle-east wonders"
+          data-location="Ma'an, Jordan"
+          data-image="https://images.unsplash.com/photo-1579606032834-d4077004f141?auto=format&fit=crop&w=800&q=80">
+          <div class="overflow-hidden h-[200px] relative">
+            <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500 z-10"></div>
+            <img src="https://images.unsplash.com/photo-1579606032834-d4077004f141?auto=format&fit=crop&w=800&q=80" alt="Petra"
+              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy">
+            <div class="absolute top-4 left-4 z-20 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase text-gray-800 shadow-sm location-badge">
+              Ma'an, Jordan</div>
+            <div class="absolute top-4 right-4 z-20 bg-amber-600/90 backdrop-blur-sm px-2.5 py-0.5 rounded-full text-[9px] font-bold tracking-wider uppercase text-white shadow-sm">
+              Middle East</div>
+          </div>
+          <div class="p-6">
+            <span class="text-[11px] text-[#ff8a1f] font-bold uppercase tracking-widest">World Wonder</span>
+            <h3 class="mt-2 mb-1 text-xl font-['Playfair_Display',_serif] font-bold text-gray-900 group-hover:text-[#ff8a1f] transition-colors">
+              Petra</h3>
+            <p class="text-sm text-gray-500 line-clamp-2 leading-relaxed">The legendary Rose-Red City and Treasury carved straight out of rugged sandstone desert cliffs by the Nabataeans.</p>
+          </div>
+        </div>
+
+        <!-- 9. Sydney Opera House -->
+        <div class="place-card bg-white rounded-[2rem] overflow-hidden border border-gray-100 cursor-pointer hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:border-orange-100 group relative lg:[&.active]:w-[480px] lg:[&.active]:max-w-none"
+          data-place="Sydney Opera House"
+          data-category="oceania wonders"
+          data-location="Sydney, Australia"
+          data-image="https://images.unsplash.com/photo-1624138784614-87fd1b6528f8?auto=format&fit=crop&w=800&q=80">
+          <div class="overflow-hidden h-[200px] relative">
+            <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500 z-10"></div>
+            <img src="https://images.unsplash.com/photo-1624138784614-87fd1b6528f8?auto=format&fit=crop&w=800&q=80" alt="Sydney Opera House"
+              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy">
+            <div class="absolute top-4 left-4 z-20 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase text-gray-800 shadow-sm location-badge">
+              Sydney, Australia</div>
+            <div class="absolute top-4 right-4 z-20 bg-teal-600/90 backdrop-blur-sm px-2.5 py-0.5 rounded-full text-[9px] font-bold tracking-wider uppercase text-white shadow-sm">
+              Oceania</div>
+          </div>
+          <div class="p-6">
+            <span class="text-[11px] text-[#ff8a1f] font-bold uppercase tracking-widest">Modern Marvel</span>
+            <h3 class="mt-2 mb-1 text-xl font-['Playfair_Display',_serif] font-bold text-gray-900 group-hover:text-[#ff8a1f] transition-colors">
+              Sydney Opera House</h3>
+            <p class="text-sm text-gray-500 line-clamp-2 leading-relaxed">Jørn Utzon's 20th-century architectural masterpiece with soaring shell roofs set on Sydney Harbour.</p>
+          </div>
+        </div>
+
+        <!-- 10. Mount Fuji -->
+        <div class="place-card bg-white rounded-[2rem] overflow-hidden border border-gray-100 cursor-pointer hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:border-orange-100 group relative lg:[&.active]:w-[480px] lg:[&.active]:max-w-none"
+          data-place="Mount Fuji"
+          data-category="asia"
+          data-location="Honshu, Japan"
+          data-image="https://images.unsplash.com/photo-1490806843957-31f4c9a91c65?auto=format&fit=crop&w=800&q=80">
+          <div class="overflow-hidden h-[200px] relative">
+            <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500 z-10"></div>
+            <img src="https://images.unsplash.com/photo-1490806843957-31f4c9a91c65?auto=format&fit=crop&w=800&q=80" alt="Mount Fuji"
+              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy">
+            <div class="absolute top-4 left-4 z-20 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase text-gray-800 shadow-sm location-badge">
+              Honshu, Japan</div>
+            <div class="absolute top-4 right-4 z-20 bg-orange-500/90 backdrop-blur-sm px-2.5 py-0.5 rounded-full text-[9px] font-bold tracking-wider uppercase text-white shadow-sm">
+              Asia</div>
+          </div>
+          <div class="p-6">
+            <span class="text-[11px] text-[#ff8a1f] font-bold uppercase tracking-widest">Sacred Volcano</span>
+            <h3 class="mt-2 mb-1 text-xl font-['Playfair_Display',_serif] font-bold text-gray-900 group-hover:text-[#ff8a1f] transition-colors">
+              Mount Fuji</h3>
+            <p class="text-sm text-gray-500 line-clamp-2 leading-relaxed">Japan's highest and most revered peak at 3,776m, celebrated for centuries in classical Japanese art.</p>
+          </div>
+        </div>
+
+        <!-- 11. Christ the Redeemer -->
+        <div class="place-card bg-white rounded-[2rem] overflow-hidden border border-gray-100 cursor-pointer hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:border-orange-100 group relative lg:[&.active]:w-[480px] lg:[&.active]:max-w-none"
+          data-place="Christ the Redeemer"
+          data-category="americas wonders"
+          data-location="Rio de Janeiro, Brazil"
+          data-image="https://images.unsplash.com/photo-1598977123418-454555aa1318?auto=format&fit=crop&w=800&q=80">
+          <div class="overflow-hidden h-[200px] relative">
+            <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500 z-10"></div>
+            <img src="https://images.unsplash.com/photo-1598977123418-454555aa1318?auto=format&fit=crop&w=800&q=80" alt="Christ the Redeemer"
+              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy">
+            <div class="absolute top-4 left-4 z-20 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase text-gray-800 shadow-sm location-badge">
+              Rio de Janeiro, Brazil</div>
+            <div class="absolute top-4 right-4 z-20 bg-emerald-600/90 backdrop-blur-sm px-2.5 py-0.5 rounded-full text-[9px] font-bold tracking-wider uppercase text-white shadow-sm">
+              Americas</div>
+          </div>
+          <div class="p-6">
+            <span class="text-[11px] text-[#ff8a1f] font-bold uppercase tracking-widest">World Wonder</span>
+            <h3 class="mt-2 mb-1 text-xl font-['Playfair_Display',_serif] font-bold text-gray-900 group-hover:text-[#ff8a1f] transition-colors">
+              Christ the Redeemer</h3>
+            <p class="text-sm text-gray-500 line-clamp-2 leading-relaxed">The 30-meter Art Deco statue crowning Mount Corcovado with open arms welcoming the world to Rio.</p>
+          </div>
+        </div>
+
+        <!-- 12. Santorini -->
+        <div class="place-card bg-white rounded-[2rem] overflow-hidden border border-gray-100 cursor-pointer hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:border-orange-100 group relative lg:[&.active]:w-[480px] lg:[&.active]:max-w-none"
+          data-place="Santorini"
+          data-category="europe"
+          data-location="Cyclades, Greece"
+          data-image="https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?auto=format&fit=crop&w=800&q=80">
+          <div class="overflow-hidden h-[200px] relative">
+            <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500 z-10"></div>
+            <img src="https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?auto=format&fit=crop&w=800&q=80" alt="Santorini"
+              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy">
+            <div class="absolute top-4 left-4 z-20 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase text-gray-800 shadow-sm location-badge">
+              Cyclades, Greece</div>
+            <div class="absolute top-4 right-4 z-20 bg-blue-600/90 backdrop-blur-sm px-2.5 py-0.5 rounded-full text-[9px] font-bold tracking-wider uppercase text-white shadow-sm">
+              Europe</div>
+          </div>
+          <div class="p-6">
+            <span class="text-[11px] text-[#ff8a1f] font-bold uppercase tracking-widest">Aegean Paradise</span>
+            <h3 class="mt-2 mb-1 text-xl font-['Playfair_Display',_serif] font-bold text-gray-900 group-hover:text-[#ff8a1f] transition-colors">
+              Santorini</h3>
+            <p class="text-sm text-gray-500 line-clamp-2 leading-relaxed">Cliff-clinging whitewashed houses and cobalt blue domes perched high above volcanic caldera waters.</p>
+          </div>
+        </div>
+
+        <!-- 13. Sagrada Familia -->
+        <div class="place-card bg-white rounded-[2rem] overflow-hidden border border-gray-100 cursor-pointer hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:border-orange-100 group relative lg:[&.active]:w-[480px] lg:[&.active]:max-w-none"
+          data-place="Sagrada Familia"
+          data-category="europe"
+          data-location="Barcelona, Spain"
+          data-image="https://images.unsplash.com/photo-1583779457094-0cefcc400b41?auto=format&fit=crop&w=800&q=80">
+          <div class="overflow-hidden h-[200px] relative">
+            <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500 z-10"></div>
+            <img src="https://images.unsplash.com/photo-1583779457094-0cefcc400b41?auto=format&fit=crop&w=800&q=80" alt="Sagrada Familia"
+              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy">
+            <div class="absolute top-4 left-4 z-20 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase text-gray-800 shadow-sm location-badge">
+              Barcelona, Spain</div>
+            <div class="absolute top-4 right-4 z-20 bg-blue-600/90 backdrop-blur-sm px-2.5 py-0.5 rounded-full text-[9px] font-bold tracking-wider uppercase text-white shadow-sm">
+              Europe</div>
+          </div>
+          <div class="p-6">
+            <span class="text-[11px] text-[#ff8a1f] font-bold uppercase tracking-widest">Gaudí Masterpiece</span>
+            <h3 class="mt-2 mb-1 text-xl font-['Playfair_Display',_serif] font-bold text-gray-900 group-hover:text-[#ff8a1f] transition-colors">
+              Sagrada Familia</h3>
+            <p class="text-sm text-gray-500 line-clamp-2 leading-relaxed">Antoni Gaudí's visionary temple combining organic nature forms with soaring stone spires.</p>
+          </div>
+        </div>
+
+        <!-- 14. Burj Khalifa -->
+        <div class="place-card bg-white rounded-[2rem] overflow-hidden border border-gray-100 cursor-pointer hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:border-orange-100 group relative lg:[&.active]:w-[480px] lg:[&.active]:max-w-none"
+          data-place="Burj Khalifa"
+          data-category="africa-middle-east"
+          data-location="Dubai, UAE"
+          data-image="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=800&q=80">
+          <div class="overflow-hidden h-[200px] relative">
+            <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500 z-10"></div>
+            <img src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=800&q=80" alt="Burj Khalifa"
+              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy">
+            <div class="absolute top-4 left-4 z-20 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase text-gray-800 shadow-sm location-badge">
+              Dubai, UAE</div>
+            <div class="absolute top-4 right-4 z-20 bg-amber-600/90 backdrop-blur-sm px-2.5 py-0.5 rounded-full text-[9px] font-bold tracking-wider uppercase text-white shadow-sm">
+              Middle East</div>
+          </div>
+          <div class="p-6">
+            <span class="text-[11px] text-[#ff8a1f] font-bold uppercase tracking-widest">World's Tallest</span>
+            <h3 class="mt-2 mb-1 text-xl font-['Playfair_Display',_serif] font-bold text-gray-900 group-hover:text-[#ff8a1f] transition-colors">
+              Burj Khalifa</h3>
+            <p class="text-sm text-gray-500 line-clamp-2 leading-relaxed">The tallest skyscraper ever built, soaring 828 meters above Dubai's skyline as a triumph of modern engineering.</p>
+          </div>
+        </div>
+
+        <!-- 15. Grand Canyon -->
+        <div class="place-card bg-white rounded-[2rem] overflow-hidden border border-gray-100 cursor-pointer hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:border-orange-100 group relative lg:[&.active]:w-[480px] lg:[&.active]:max-w-none"
+          data-place="Grand Canyon"
+          data-category="americas"
+          data-location="Arizona, USA"
+          data-image="https://images.unsplash.com/photo-1474044159687-1ee9f3a51722?auto=format&fit=crop&w=800&q=80">
+          <div class="overflow-hidden h-[200px] relative">
+            <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500 z-10"></div>
+            <img src="https://images.unsplash.com/photo-1474044159687-1ee9f3a51722?auto=format&fit=crop&w=800&q=80" alt="Grand Canyon"
+              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy">
+            <div class="absolute top-4 left-4 z-20 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase text-gray-800 shadow-sm location-badge">
+              Arizona, USA</div>
+            <div class="absolute top-4 right-4 z-20 bg-emerald-600/90 backdrop-blur-sm px-2.5 py-0.5 rounded-full text-[9px] font-bold tracking-wider uppercase text-white shadow-sm">
+              Americas</div>
+          </div>
+          <div class="p-6">
+            <span class="text-[11px] text-[#ff8a1f] font-bold uppercase tracking-widest">Natural Wonder</span>
+            <h3 class="mt-2 mb-1 text-xl font-['Playfair_Display',_serif] font-bold text-gray-900 group-hover:text-[#ff8a1f] transition-colors">
+              Grand Canyon</h3>
+            <p class="text-sm text-gray-500 line-clamp-2 leading-relaxed">A mile-deep gorge carved by the Colorado River exposing billions of years of stunning geological history.</p>
+          </div>
+        </div>
+
+        <!-- 16. Angkor Wat -->
+        <div class="place-card bg-white rounded-[2rem] overflow-hidden border border-gray-100 cursor-pointer hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:border-orange-100 group relative lg:[&.active]:w-[480px] lg:[&.active]:max-w-none"
+          data-place="Angkor Wat"
+          data-category="asia wonders"
+          data-location="Siem Reap, Cambodia"
+          data-image="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80">
+          <div class="overflow-hidden h-[200px] relative">
+            <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500 z-10"></div>
+            <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80" alt="Angkor Wat"
+              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy">
+            <div class="absolute top-4 left-4 z-20 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase text-gray-800 shadow-sm location-badge">
+              Siem Reap, Cambodia</div>
+            <div class="absolute top-4 right-4 z-20 bg-orange-500/90 backdrop-blur-sm px-2.5 py-0.5 rounded-full text-[9px] font-bold tracking-wider uppercase text-white shadow-sm">
+              Asia</div>
+          </div>
+          <div class="p-6">
+            <span class="text-[11px] text-[#ff8a1f] font-bold uppercase tracking-widest">Ancient Temple</span>
+            <h3 class="mt-2 mb-1 text-xl font-['Playfair_Display',_serif] font-bold text-gray-900 group-hover:text-[#ff8a1f] transition-colors">
+              Angkor Wat</h3>
+            <p class="text-sm text-gray-500 line-clamp-2 leading-relaxed">The world's largest religious monument, constructed in the 12th century by the Khmer Empire with epic carvings.</p>
+          </div>
+        </div>
+
+        <!-- 17. Big Ben -->
+        <div class="place-card bg-white rounded-[2rem] overflow-hidden border border-gray-100 cursor-pointer hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:border-orange-100 group relative lg:[&.active]:w-[480px] lg:[&.active]:max-w-none"
+          data-place="Big Ben"
+          data-category="europe"
+          data-location="London, UK"
+          data-image="https://images.unsplash.com/photo-1529655683826-aba9b3e77383?auto=format&fit=crop&w=800&q=80">
+          <div class="overflow-hidden h-[200px] relative">
+            <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500 z-10"></div>
+            <img src="https://images.unsplash.com/photo-1529655683826-aba9b3e77383?auto=format&fit=crop&w=800&q=80" alt="Big Ben"
+              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy">
+            <div class="absolute top-4 left-4 z-20 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase text-gray-800 shadow-sm location-badge">
+              London, UK</div>
+            <div class="absolute top-4 right-4 z-20 bg-blue-600/90 backdrop-blur-sm px-2.5 py-0.5 rounded-full text-[9px] font-bold tracking-wider uppercase text-white shadow-sm">
+              Europe</div>
+          </div>
+          <div class="p-6">
+            <span class="text-[11px] text-[#ff8a1f] font-bold uppercase tracking-widest">British Icon</span>
+            <h3 class="mt-2 mb-1 text-xl font-['Playfair_Display',_serif] font-bold text-gray-900 group-hover:text-[#ff8a1f] transition-colors">
+              Big Ben</h3>
+            <p class="text-sm text-gray-500 line-clamp-2 leading-relaxed">The legendary Great Clock of Westminster chimes across London from the Neo-Gothic Elizabeth Tower.</p>
+          </div>
+        </div>
+
+        <!-- 18. Victoria Falls -->
+        <div class="place-card bg-white rounded-[2rem] overflow-hidden border border-gray-100 cursor-pointer hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:border-orange-100 group relative lg:[&.active]:w-[480px] lg:[&.active]:max-w-none"
+          data-place="Victoria Falls"
+          data-category="africa-middle-east"
+          data-location="Zambia / Zimbabwe"
+          data-image="https://images.unsplash.com/photo-1609198092458-38a293c7ac4b?auto=format&fit=crop&w=800&q=80">
+          <div class="overflow-hidden h-[200px] relative">
+            <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500 z-10"></div>
+            <img src="https://images.unsplash.com/photo-1609198092458-38a293c7ac4b?auto=format&fit=crop&w=800&q=80" alt="Victoria Falls"
+              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy">
+            <div class="absolute top-4 left-4 z-20 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase text-gray-800 shadow-sm location-badge">
+              Zambia / Zimbabwe</div>
+            <div class="absolute top-4 right-4 z-20 bg-amber-600/90 backdrop-blur-sm px-2.5 py-0.5 rounded-full text-[9px] font-bold tracking-wider uppercase text-white shadow-sm">
+              Africa</div>
+          </div>
+          <div class="p-6">
+            <span class="text-[11px] text-[#ff8a1f] font-bold uppercase tracking-widest">Natural Wonder</span>
+            <h3 class="mt-2 mb-1 text-xl font-['Playfair_Display',_serif] font-bold text-gray-900 group-hover:text-[#ff8a1f] transition-colors">
+              Victoria Falls</h3>
+            <p class="text-sm text-gray-500 line-clamp-2 leading-relaxed">The Smoke That Thunders: the largest falling sheet of water on Earth plunging into the dramatic Zambezi gorge.</p>
+          </div>
+        </div>
+
+        <!-- 19. Chichen Itza -->
+        <div class="place-card bg-white rounded-[2rem] overflow-hidden border border-gray-100 cursor-pointer hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:border-orange-100 group relative lg:[&.active]:w-[480px] lg:[&.active]:max-w-none"
+          data-place="Chichen Itza"
+          data-category="americas wonders"
+          data-location="Yucatán, Mexico"
+          data-image="https://images.unsplash.com/photo-1518638150340-f706e86654de?auto=format&fit=crop&w=800&q=80">
+          <div class="overflow-hidden h-[200px] relative">
+            <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500 z-10"></div>
+            <img src="https://images.unsplash.com/photo-1518638150340-f706e86654de?auto=format&fit=crop&w=800&q=80" alt="Chichen Itza"
+              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy">
+            <div class="absolute top-4 left-4 z-20 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase text-gray-800 shadow-sm location-badge">
+              Yucatán, Mexico</div>
+            <div class="absolute top-4 right-4 z-20 bg-emerald-600/90 backdrop-blur-sm px-2.5 py-0.5 rounded-full text-[9px] font-bold tracking-wider uppercase text-white shadow-sm">
+              Americas</div>
+          </div>
+          <div class="p-6">
+            <span class="text-[11px] text-[#ff8a1f] font-bold uppercase tracking-widest">World Wonder</span>
+            <h3 class="mt-2 mb-1 text-xl font-['Playfair_Display',_serif] font-bold text-gray-900 group-hover:text-[#ff8a1f] transition-colors">
+              Chichen Itza</h3>
+            <p class="text-sm text-gray-500 line-clamp-2 leading-relaxed">The ancient Maya pyramid city centered on El Castillo, celebrated for remarkable astronomical alignment.</p>
+          </div>
+        </div>
+
+        <!-- 20. Milford Sound -->
+        <div class="place-card bg-white rounded-[2rem] overflow-hidden border border-gray-100 cursor-pointer hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:border-orange-100 group relative lg:[&.active]:w-[480px] lg:[&.active]:max-w-none"
+          data-place="Milford Sound"
+          data-category="oceania"
+          data-location="Fiordland, New Zealand"
+          data-image="https://images.unsplash.com/photo-1507699622108-4be3abd695ad?auto=format&fit=crop&w=800&q=80">
+          <div class="overflow-hidden h-[200px] relative">
+            <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500 z-10"></div>
+            <img src="https://images.unsplash.com/photo-1507699622108-4be3abd695ad?auto=format&fit=crop&w=800&q=80" alt="Milford Sound"
+              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy">
+            <div class="absolute top-4 left-4 z-20 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase text-gray-800 shadow-sm location-badge">
+              Fiordland, New Zealand</div>
+            <div class="absolute top-4 right-4 z-20 bg-teal-600/90 backdrop-blur-sm px-2.5 py-0.5 rounded-full text-[9px] font-bold tracking-wider uppercase text-white shadow-sm">
+              Oceania</div>
+          </div>
+          <div class="p-6">
+            <span class="text-[11px] text-[#ff8a1f] font-bold uppercase tracking-widest">Glacial Fjord</span>
+            <h3 class="mt-2 mb-1 text-xl font-['Playfair_Display',_serif] font-bold text-gray-900 group-hover:text-[#ff8a1f] transition-colors">
+              Milford Sound</h3>
+            <p class="text-sm text-gray-500 line-clamp-2 leading-relaxed">Pristine glacial fjord framed by 1,200-meter sheer rock faces and cascading waterfalls in New Zealand's South Island.</p>
+          </div>
+        </div>
+
+        <!-- 21. Matterhorn -->
+        <div class="place-card bg-white rounded-[2rem] overflow-hidden border border-gray-100 cursor-pointer hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:border-orange-100 group relative lg:[&.active]:w-[480px] lg:[&.active]:max-w-none"
+          data-place="Matterhorn"
+          data-category="europe"
+          data-location="Zermatt, Switzerland"
+          data-image="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=80">
+          <div class="overflow-hidden h-[200px] relative">
+            <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500 z-10"></div>
+            <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=80" alt="Matterhorn"
+              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy">
+            <div class="absolute top-4 left-4 z-20 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase text-gray-800 shadow-sm location-badge">
+              Zermatt, Switzerland</div>
+            <div class="absolute top-4 right-4 z-20 bg-blue-600/90 backdrop-blur-sm px-2.5 py-0.5 rounded-full text-[9px] font-bold tracking-wider uppercase text-white shadow-sm">
+              Europe</div>
+          </div>
+          <div class="p-6">
+            <span class="text-[11px] text-[#ff8a1f] font-bold uppercase tracking-widest">Alpine Wonder</span>
+            <h3 class="mt-2 mb-1 text-xl font-['Playfair_Display',_serif] font-bold text-gray-900 group-hover:text-[#ff8a1f] transition-colors">
+              Matterhorn</h3>
+            <p class="text-sm text-gray-500 line-clamp-2 leading-relaxed">The iconic 4,478-meter pyramidal peak in the Pennine Alps, reigning as the symbol of the Swiss Alps.</p>
+          </div>
+        </div>
+
+        <!-- 22. Serengeti National Park -->
+        <div class="place-card bg-white rounded-[2rem] overflow-hidden border border-gray-100 cursor-pointer hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:border-orange-100 group relative lg:[&.active]:w-[480px] lg:[&.active]:max-w-none"
+          data-place="Serengeti National Park"
+          data-category="africa-middle-east"
+          data-location="Mara, Tanzania"
+          data-image="https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=800&q=80">
+          <div class="overflow-hidden h-[200px] relative">
+            <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500 z-10"></div>
+            <img src="https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=800&q=80" alt="Serengeti National Park"
+              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy">
+            <div class="absolute top-4 left-4 z-20 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase text-gray-800 shadow-sm location-badge">
+              Mara, Tanzania</div>
+            <div class="absolute top-4 right-4 z-20 bg-amber-600/90 backdrop-blur-sm px-2.5 py-0.5 rounded-full text-[9px] font-bold tracking-wider uppercase text-white shadow-sm">
+              Africa</div>
+          </div>
+          <div class="p-6">
+            <span class="text-[11px] text-[#ff8a1f] font-bold uppercase tracking-widest">Wildlife Safari</span>
+            <h3 class="mt-2 mb-1 text-xl font-['Playfair_Display',_serif] font-bold text-gray-900 group-hover:text-[#ff8a1f] transition-colors">
+              Serengeti National Park</h3>
+            <p class="text-sm text-gray-500 line-clamp-2 leading-relaxed">Vast golden savannah plains hosting the Great Migration of over 1.5 million wildebeest and apex predators.</p>
+          </div>
+        </div>
+
+        <!-- 23. Great Barrier Reef -->
+        <div class="place-card bg-white rounded-[2rem] overflow-hidden border border-gray-100 cursor-pointer hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:border-orange-100 group relative lg:[&.active]:w-[480px] lg:[&.active]:max-w-none"
+          data-place="Great Barrier Reef"
+          data-category="oceania"
+          data-location="Queensland, Australia"
+          data-image="https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=800&q=80">
+          <div class="overflow-hidden h-[200px] relative">
+            <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500 z-10"></div>
+            <img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=800&q=80" alt="Great Barrier Reef"
+              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy">
+            <div class="absolute top-4 left-4 z-20 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase text-gray-800 shadow-sm location-badge">
+              Queensland, Australia</div>
+            <div class="absolute top-4 right-4 z-20 bg-teal-600/90 backdrop-blur-sm px-2.5 py-0.5 rounded-full text-[9px] font-bold tracking-wider uppercase text-white shadow-sm">
+              Oceania</div>
+          </div>
+          <div class="p-6">
+            <span class="text-[11px] text-[#ff8a1f] font-bold uppercase tracking-widest">Marine Wonder</span>
+            <h3 class="mt-2 mb-1 text-xl font-['Playfair_Display',_serif] font-bold text-gray-900 group-hover:text-[#ff8a1f] transition-colors">
+              Great Barrier Reef</h3>
+            <p class="text-sm text-gray-500 line-clamp-2 leading-relaxed">The world's largest living coral reef system, spanning 2,300 km and visible from outer space.</p>
+          </div>
+        </div>
+
+        <!-- 24. Golden Temple -->
+        <div class="place-card bg-white rounded-[2rem] overflow-hidden border border-gray-100 cursor-pointer hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:border-orange-100 group relative lg:[&.active]:w-[480px] lg:[&.active]:max-w-none"
+          data-place="Golden Temple"
+          data-category="asia"
+          data-location="Amritsar, India"
           data-image="https://s3.ap-south-1.amazonaws.com/new-assets.ccbp.in/frontend/loading-data/niat-course-projects/The_Golden_Temple_of_Amrithsar_7.jpg">
           <div class="overflow-hidden h-[200px] relative">
-            <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500 z-10">
-            </div>
-            <img src="https://s3.ap-south-1.amazonaws.com/new-assets.ccbp.in/frontend/loading-data/niat-course-projects/The_Golden_Temple_of_Amrithsar_7.jpg"
-              alt="Golden Temple"
-              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-            <div
-              class="absolute top-4 left-4 z-20 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase text-gray-800 shadow-sm">
-              Amritsar</div>
+            <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500 z-10"></div>
+            <img src="https://s3.ap-south-1.amazonaws.com/new-assets.ccbp.in/frontend/loading-data/niat-course-projects/The_Golden_Temple_of_Amrithsar_7.jpg" alt="Golden Temple"
+              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy">
+            <div class="absolute top-4 left-4 z-20 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase text-gray-800 shadow-sm location-badge">
+              Amritsar, India</div>
+            <div class="absolute top-4 right-4 z-20 bg-orange-500/90 backdrop-blur-sm px-2.5 py-0.5 rounded-full text-[9px] font-bold tracking-wider uppercase text-white shadow-sm">
+              Asia</div>
           </div>
           <div class="p-6">
-            <span class="text-[11px] text-[#ff8a1f] font-bold uppercase tracking-widest">Spiritual</span>
-            <h3
-              class="mt-2 mb-1 text-xl font-['Playfair_Display',_serif] font-bold text-gray-900 group-hover:text-[#ff8a1f] transition-colors">
+            <span class="text-[11px] text-[#ff8a1f] font-bold uppercase tracking-widest">Spiritual Sanctuary</span>
+            <h3 class="mt-2 mb-1 text-xl font-['Playfair_Display',_serif] font-bold text-gray-900 group-hover:text-[#ff8a1f] transition-colors">
               Golden Temple</h3>
-            <p class="text-sm text-gray-500 line-clamp-2 leading-relaxed">Also known as Sri Harmandir Sahib, it is the
-              holiest Gurdwara of Sikhism.</p>
+            <p class="text-sm text-gray-500 line-clamp-2 leading-relaxed">Sri Harmandir Sahib, the holiest Sikh shrine adorned in pure gold foil and surrounded by sacred waters.</p>
           </div>
         </div>
 
-        <div class="place-card bg-white rounded-[2rem] overflow-hidden border border-gray-100 cursor-pointer hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:border-orange-100 group relative
-                  lg:[&.active]:w-[480px] lg:[&.active]:max-w-none" data-place="Mysore Palace"
+        <!-- 25. Red Fort -->
+        <div class="place-card bg-white rounded-[2rem] overflow-hidden border border-gray-100 cursor-pointer hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:border-orange-100 group relative lg:[&.active]:w-[480px] lg:[&.active]:max-w-none"
+          data-place="Red Fort"
+          data-category="asia"
+          data-location="New Delhi, India"
+          data-image="https://s3.ap-south-1.amazonaws.com/new-assets.ccbp.in/frontend/loading-data/niat-course-projects/Delhi_fort.jpg">
+          <div class="overflow-hidden h-[200px] relative">
+            <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500 z-10"></div>
+            <img src="https://s3.ap-south-1.amazonaws.com/new-assets.ccbp.in/frontend/loading-data/niat-course-projects/Delhi_fort.jpg" alt="Red Fort"
+              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy">
+            <div class="absolute top-4 left-4 z-20 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase text-gray-800 shadow-sm location-badge">
+              New Delhi, India</div>
+            <div class="absolute top-4 right-4 z-20 bg-orange-500/90 backdrop-blur-sm px-2.5 py-0.5 rounded-full text-[9px] font-bold tracking-wider uppercase text-white shadow-sm">
+              Asia</div>
+          </div>
+          <div class="p-6">
+            <span class="text-[11px] text-[#ff8a1f] font-bold uppercase tracking-widest">Imperial Fortress</span>
+            <h3 class="mt-2 mb-1 text-xl font-['Playfair_Display',_serif] font-bold text-gray-900 group-hover:text-[#ff8a1f] transition-colors">
+              Red Fort</h3>
+            <p class="text-sm text-gray-500 line-clamp-2 leading-relaxed">Emperor Shah Jahan's historic red sandstone fortress that was the ceremonial center of the Mughal Empire.</p>
+          </div>
+        </div>
+
+        <!-- 26. Gateway of India -->
+        <div class="place-card bg-white rounded-[2rem] overflow-hidden border border-gray-100 cursor-pointer hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:border-orange-100 group relative lg:[&.active]:w-[480px] lg:[&.active]:max-w-none"
+          data-place="Gateway of India"
+          data-category="asia"
+          data-location="Mumbai, India"
+          data-image="https://s3.ap-south-1.amazonaws.com/new-assets.ccbp.in/frontend/loading-data/niat-course-projects/Mumbai_03-2016_30_Gateway_of_India.jpg">
+          <div class="overflow-hidden h-[200px] relative">
+            <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500 z-10"></div>
+            <img src="https://s3.ap-south-1.amazonaws.com/new-assets.ccbp.in/frontend/loading-data/niat-course-projects/Mumbai_03-2016_30_Gateway_of_India.jpg" alt="Gateway of India"
+              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy">
+            <div class="absolute top-4 left-4 z-20 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase text-gray-800 shadow-sm location-badge">
+              Mumbai, India</div>
+            <div class="absolute top-4 right-4 z-20 bg-orange-500/90 backdrop-blur-sm px-2.5 py-0.5 rounded-full text-[9px] font-bold tracking-wider uppercase text-white shadow-sm">
+              Asia</div>
+          </div>
+          <div class="p-6">
+            <span class="text-[11px] text-[#ff8a1f] font-bold uppercase tracking-widest">Harbor Monument</span>
+            <h3 class="mt-2 mb-1 text-xl font-['Playfair_Display',_serif] font-bold text-gray-900 group-hover:text-[#ff8a1f] transition-colors">
+              Gateway of India</h3>
+            <p class="text-sm text-gray-500 line-clamp-2 leading-relaxed">The imposing 26-meter Indo-Saracenic basalt arch built overlooking the Arabian Sea harbor in Mumbai.</p>
+          </div>
+        </div>
+
+        <!-- 27. Hawa Mahal -->
+        <div class="place-card bg-white rounded-[2rem] overflow-hidden border border-gray-100 cursor-pointer hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:border-orange-100 group relative lg:[&.active]:w-[480px] lg:[&.active]:max-w-none"
+          data-place="Hawa Mahal"
+          data-category="asia"
+          data-location="Jaipur, India"
+          data-image="https://s3.ap-south-1.amazonaws.com/new-assets.ccbp.in/frontend/loading-data/niat-course-projects/East_facade_Hawa_Mahal_Jaipur_from_ground_level_%28July_2022%29_-_img_01.jpg">
+          <div class="overflow-hidden h-[200px] relative">
+            <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500 z-10"></div>
+            <img src="https://s3.ap-south-1.amazonaws.com/new-assets.ccbp.in/frontend/loading-data/niat-course-projects/East_facade_Hawa_Mahal_Jaipur_from_ground_level_%28July_2022%29_-_img_01.jpg" alt="Hawa Mahal"
+              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy">
+            <div class="absolute top-4 left-4 z-20 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase text-gray-800 shadow-sm location-badge">
+              Jaipur, India</div>
+            <div class="absolute top-4 right-4 z-20 bg-orange-500/90 backdrop-blur-sm px-2.5 py-0.5 rounded-full text-[9px] font-bold tracking-wider uppercase text-white shadow-sm">
+              Asia</div>
+          </div>
+          <div class="p-6">
+            <span class="text-[11px] text-[#ff8a1f] font-bold uppercase tracking-widest">Palace of Winds</span>
+            <h3 class="mt-2 mb-1 text-xl font-['Playfair_Display',_serif] font-bold text-gray-900 group-hover:text-[#ff8a1f] transition-colors">
+              Hawa Mahal</h3>
+            <p class="text-sm text-gray-500 line-clamp-2 leading-relaxed">The honeycomb pink sandstone palace featuring 953 ornate latticed windows designed to circulate gentle breezes.</p>
+          </div>
+        </div>
+
+        <!-- 28. Mysore Palace -->
+        <div class="place-card bg-white rounded-[2rem] overflow-hidden border border-gray-100 cursor-pointer hover:-translate-y-2 hover:shadow-[0_10px_40px_-10px_rgba(0,0,0,0.08)] hover:border-orange-100 group relative lg:[&.active]:w-[480px] lg:[&.active]:max-w-none"
+          data-place="Mysore Palace"
+          data-category="asia"
+          data-location="Mysore, India"
           data-image="https://s3.ap-south-1.amazonaws.com/new-assets.ccbp.in/frontend/loading-data/niat-course-projects/Mysore_Palace_Morning.jpg">
           <div class="overflow-hidden h-[200px] relative">
-            <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500 z-10">
-            </div>
+            <div class="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors duration-500 z-10"></div>
             <img src="https://s3.ap-south-1.amazonaws.com/new-assets.ccbp.in/frontend/loading-data/niat-course-projects/Mysore_Palace_Morning.jpg" alt="Mysore Palace"
-              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-            <div
-              class="absolute top-4 left-4 z-20 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase text-gray-800 shadow-sm">
-              Mysore</div>
+              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy">
+            <div class="absolute top-4 left-4 z-20 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full text-[10px] font-bold tracking-wider uppercase text-gray-800 shadow-sm location-badge">
+              Mysore, India</div>
+            <div class="absolute top-4 right-4 z-20 bg-orange-500/90 backdrop-blur-sm px-2.5 py-0.5 rounded-full text-[9px] font-bold tracking-wider uppercase text-white shadow-sm">
+              Asia</div>
           </div>
           <div class="p-6">
             <span class="text-[11px] text-[#ff8a1f] font-bold uppercase tracking-widest">Royal Palace</span>
-            <h3
-              class="mt-2 mb-1 text-xl font-['Playfair_Display',_serif] font-bold text-gray-900 group-hover:text-[#ff8a1f] transition-colors">
+            <h3 class="mt-2 mb-1 text-xl font-['Playfair_Display',_serif] font-bold text-gray-900 group-hover:text-[#ff8a1f] transition-colors">
               Mysore Palace</h3>
-            <p class="text-sm text-gray-500 line-clamp-2 leading-relaxed">A historical palace and a royal residence at
-              Mysore in the Indian State of Karnataka.</p>
+            <p class="text-sm text-gray-500 line-clamp-2 leading-relaxed">The opulent seat of the Wadiyar dynasty in Karnataka, illuminated by nearly 100,000 bulbs during Dasara festivities.</p>
           </div>
         </div>
 

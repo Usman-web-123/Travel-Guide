@@ -13,10 +13,19 @@ const LOCALES = {
   Telugu: "te-IN"
 };
 
-// Dynamic API URL for local & production deployment
-const API_BASE_URL = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" 
-  ? "http://127.0.0.1:5000" 
-  : "https://travel-guide-0jho.onrender.com";
+// Dynamic API URL setup with production fallback
+const LOCAL_API_URL = "http://127.0.0.1:5000";
+const PROD_API_URL = "https://travel-guide-0jho.onrender.com";
+
+function getPrimaryApiUrl() {
+  const isLocalEnv = window.location.hostname === "localhost" || 
+                     window.location.hostname === "127.0.0.1" || 
+                     window.location.protocol === "file:" || 
+                     window.location.hostname === "";
+  return isLocalEnv ? LOCAL_API_URL : PROD_API_URL;
+}
+
+let API_BASE_URL = getPrimaryApiUrl();
 
 // --- State ---
 const state = {
@@ -28,11 +37,42 @@ const state = {
   currentUser: JSON.parse(localStorage.getItem('travel_user') || 'null')
 };
 
-// --- Helper for Safe Fetch ---
-async function safeFetchJson(url, options = {}) {
-  const res = await fetch(url, options);
+// --- Helper for Safe Fetch with Automatic Endpoint Fallback ---
+async function safeFetchJson(targetUrlOrEndpoint, options = {}) {
+  let path = targetUrlOrEndpoint;
+  if (path.startsWith("http://") || path.startsWith("https://")) {
+    try {
+      const parsed = new URL(path);
+      path = parsed.pathname + parsed.search;
+    } catch (e) {
+      // keep path as is
+    }
+  }
+  if (!path.startsWith("/")) path = "/" + path;
+
+  const primaryUrl = `${API_BASE_URL}${path}`;
+  const fallbackUrl = API_BASE_URL === LOCAL_API_URL 
+    ? `${PROD_API_URL}${path}` 
+    : `${LOCAL_API_URL}${path}`;
+
+  let res;
+  try {
+    res = await fetch(primaryUrl, options);
+  } catch (primaryErr) {
+    // If primary fetch failed (e.g. local server not started), try fallback URL
+    try {
+      res = await fetch(fallbackUrl, options);
+      API_BASE_URL = API_BASE_URL === LOCAL_API_URL ? PROD_API_URL : LOCAL_API_URL;
+    } catch (fallbackErr) {
+      throw new Error(
+        "Unable to connect to the Travel Guide server. " +
+        "Please make sure the backend server is running (run 'python Backend/app.py') " +
+        "or check your internet connection."
+      );
+    }
+  }
+
   const contentType = res.headers.get("content-type") || "";
-  
   if (!contentType.includes("application/json")) {
     const text = await res.text();
     throw new Error(text || `Server returned non-JSON status ${res.status}`);
@@ -167,6 +207,7 @@ function deselectDestination() {
     cardsContainer.classList.remove('faded');
     searchPreviewCard.classList.add('hidden');
     document.querySelectorAll('.place-card').forEach(card => card.classList.remove('active'));
+    if (typeof applyFilters === 'function') applyFilters();
     updateNavigationState('landing');
   }, 300);
 }
@@ -252,27 +293,69 @@ authForm.addEventListener('submit', async (e) => {
   }
 });
 
-// --- Search Handler ---
-function performSearch() {
-  const query = searchInput.value.trim().toLowerCase();
-  if (!query) return;
+// --- Continent & Category Filter Logic ---
+const filterTabs = document.querySelectorAll('.filter-tab');
 
+function applyFilters() {
+  const activeFilter = state.activeFilter || 'all';
+  const query = (searchInput.value || '').trim().toLowerCase();
   const cards = document.querySelectorAll('.place-card:not(.search-preview-card)');
-  let foundCard = null;
 
   cards.forEach(card => {
-    const place = card.dataset.place.toLowerCase();
-    if (place.includes(query)) {
-      foundCard = card;
+    const categories = (card.dataset.category || '').toLowerCase();
+    const place = (card.dataset.place || '').toLowerCase();
+    const location = (card.dataset.location || '').toLowerCase();
+
+    const matchesFilter = activeFilter === 'all' || categories.includes(activeFilter);
+    const matchesSearch = !query || place.includes(query) || location.includes(query);
+
+    if (matchesFilter && matchesSearch) {
+      card.style.display = '';
+    } else {
+      card.style.display = 'none';
     }
+  });
+}
+
+filterTabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    const filter = tab.dataset.filter;
+    state.activeFilter = filter;
+
+    filterTabs.forEach(t => {
+      t.classList.remove('active', 'bg-[#ff8a1f]', 'text-white', 'shadow-md', 'shadow-orange-200');
+      t.classList.add('bg-white', 'text-gray-600', 'border', 'border-gray-200');
+    });
+
+    tab.classList.add('active', 'bg-[#ff8a1f]', 'text-white', 'shadow-md', 'shadow-orange-200');
+    tab.classList.remove('bg-white', 'text-gray-600', 'border', 'border-gray-200');
+
+    applyFilters();
+  });
+});
+
+// --- Search Handler ---
+function performSearch() {
+  const query = searchInput.value.trim();
+  if (!query) return;
+  const lowerQuery = query.toLowerCase();
+
+  const cards = Array.from(document.querySelectorAll('.place-card:not(.search-preview-card)'));
+  let foundCard = cards.find(card => {
+    const place = (card.dataset.place || '').toLowerCase();
+    const location = (card.dataset.location || '').toLowerCase();
+    return place.includes(lowerQuery) || location.includes(lowerQuery);
   });
 
   if (foundCard) {
+    foundCard.style.display = '';
     selectDestination(foundCard.dataset.place, foundCard.dataset.image, foundCard);
     destinationsSection.scrollIntoView({ behavior: 'smooth' });
   } else {
-    alert(`No landmark found matching "${query}". Showing Taj Mahal preview.`);
-    selectDestination("Taj Mahal", "https://s3.ap-south-1.amazonaws.com/new-assets.ccbp.in/frontend/loading-data/niat-course-projects/Taj_Mahal_%28Edited%29.jpeg");
+    // Dynamic preview for any searched world landmark
+    const fallbackImage = "https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=800&q=80";
+    selectDestination(query, fallbackImage);
+    destinationsSection.scrollIntoView({ behavior: 'smooth' });
   }
 }
 
@@ -280,13 +363,28 @@ searchBtn.addEventListener('click', performSearch);
 searchInput.addEventListener('keypress', (e) => {
   if (e.key === 'Enter') performSearch();
 });
+searchInput.addEventListener('input', () => {
+  if (state.currentView === 'landing') {
+    applyFilters();
+  }
+});
 
 // --- Event Listeners ---
 closeButton.addEventListener('click', deselectDestination);
 
+// Click delegation for all landmark cards
+cardsContainer.addEventListener('click', (e) => {
+  const card = e.target.closest('.place-card:not(.search-preview-card)');
+  if (card && state.currentView !== 'destination') {
+    selectDestination(card.dataset.place, card.dataset.image, card);
+  }
+});
+
 document.querySelectorAll('.place-card:not(.search-preview-card)').forEach(card => {
   card.addEventListener('click', () => {
-    selectDestination(card.dataset.place, card.dataset.image, card);
+    if (state.currentView !== 'destination') {
+      selectDestination(card.dataset.place, card.dataset.image, card);
+    }
   });
 });
 
