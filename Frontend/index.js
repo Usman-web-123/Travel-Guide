@@ -87,6 +87,7 @@ async function safeFetchJson(targetUrlOrEndpoint, options = {}) {
 
 // --- DOM Elements ---
 const globalBackBtn = document.getElementById('globalBackBtn');
+const brandLogo = document.getElementById('brandLogo');
 const landingHero = document.getElementById('landingHero');
 const destinationsSection = document.getElementById('destinationsSection');
 const cardsContainer = document.querySelector('.cards');
@@ -132,7 +133,7 @@ const authAlert = document.getElementById('authAlert');
 
 let authMode = 'login'; // 'login' or 'signup'
 
-// --- Navigation & Back Button Management ---
+// --- Navigation, History & Back Button Management ---
 function updateNavigationState(view) {
   state.currentView = view;
   if (view === 'destination') {
@@ -142,10 +143,80 @@ function updateNavigationState(view) {
   }
 }
 
-// Global top-left Back button handler
-globalBackBtn.addEventListener('click', () => {
-  deselectDestination();
+// Unified Back Navigation Handler (for browser back button & on-screen back buttons)
+function handleBackNavigation() {
+  if (!authModal.classList.contains('hidden')) {
+    if (window.history.state && window.history.state.view === 'auth') {
+      window.history.back();
+    } else {
+      closeAuthModal();
+    }
+    return;
+  }
+
+  if (state.currentView === 'destination') {
+    if (window.history.state && window.history.state.view === 'destination') {
+      window.history.back();
+    } else {
+      deselectDestination(false);
+    }
+    return;
+  }
+
+  // Already on landing view - scroll smoothly to top
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// --- Browser History Popstate Listener (Handles Browser ← and → Buttons) ---
+window.addEventListener('popstate', (e) => {
+  const currentState = e.state;
+
+  // 1. If auth modal is open and popped state is not auth, close modal
+  if (!authModal.classList.contains('hidden') && (!currentState || currentState.view !== 'auth')) {
+    closeAuthModal();
+    if (!currentState || currentState.view !== 'destination') {
+      return;
+    }
+  }
+
+  // 2. Navigated forward/back to a Destination
+  if (currentState && currentState.view === 'destination') {
+    const cards = Array.from(document.querySelectorAll('.place-card:not(.search-preview-card)'));
+    const matchedCard = cards.find(c => (c.dataset.place || '').toLowerCase() === (currentState.place || '').toLowerCase());
+    selectDestination(currentState.place, currentState.image, matchedCard, false);
+    return;
+  }
+
+  // 3. Navigated forward/back to Auth modal
+  if (currentState && currentState.view === 'auth') {
+    openAuthModal(currentState.authMode || 'login', false);
+    return;
+  }
+
+  // 4. Navigated back to Landing page (destinations grid)
+  if (state.currentView === 'destination') {
+    deselectDestination(false);
+  }
 });
+
+// Initialize initial browser history entry so clicking browser ← stays inside the app
+if (!history.state) {
+  history.replaceState({ view: 'landing' }, '', window.location.pathname + (window.location.hash || ''));
+}
+
+// Global top-left Back button handler
+globalBackBtn.addEventListener('click', handleBackNavigation);
+
+// Brand Logo handler (returns to landing view)
+if (brandLogo) {
+  brandLogo.addEventListener('click', () => {
+    if (state.currentView === 'destination') {
+      handleBackNavigation();
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  });
+}
 
 // --- Functions ---
 function updateAuthUI() {
@@ -159,7 +230,7 @@ function updateAuthUI() {
   }
 }
 
-function selectDestination(place, image, clickedCard = null) {
+function selectDestination(place, image, clickedCard = null, pushHistory = true) {
   state.place = place;
   state.image = image;
 
@@ -196,9 +267,15 @@ function selectDestination(place, image, clickedCard = null) {
   }, 10);
 
   updateNavigationState('destination');
+
+  // Push destination state to browser history so the browser Back button returns to the landmarks grid
+  if (pushHistory) {
+    const slug = place.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+    history.pushState({ view: 'destination', place, image }, '', `#${slug}`);
+  }
 }
 
-function deselectDestination() {
+function deselectDestination(updateHistory = false) {
   experiencePanel.classList.remove('visible');
 
   // Wait for animation to finish before hiding
@@ -210,10 +287,14 @@ function deselectDestination() {
     if (typeof applyFilters === 'function') applyFilters();
     updateNavigationState('landing');
   }, 300);
+
+  if (updateHistory) {
+    history.pushState({ view: 'landing' }, '', window.location.pathname);
+  }
 }
 
 // --- Auth Modal Control ---
-function openAuthModal(mode = 'login') {
+function openAuthModal(mode = 'login', pushHistory = true) {
   authMode = mode;
   authModal.classList.remove('hidden');
   authAlert.classList.add('hidden');
@@ -237,6 +318,10 @@ function openAuthModal(mode = 'login') {
     authModalSub.textContent = 'Join Travel Guide to explore AI audio guides';
     authSubmitBtn.textContent = 'Sign Up';
   }
+
+  if (pushHistory) {
+    history.pushState({ view: 'auth', authMode: mode }, '', '#auth');
+  }
 }
 
 function closeAuthModal() {
@@ -244,8 +329,8 @@ function closeAuthModal() {
 }
 
 // Modal Back & Close Events
-modalBackBtn.addEventListener('click', closeAuthModal);
-modalCloseBtn.addEventListener('click', closeAuthModal);
+modalBackBtn.addEventListener('click', handleBackNavigation);
+modalCloseBtn.addEventListener('click', handleBackNavigation);
 tabLogin.addEventListener('click', () => openAuthModal('login'));
 tabSignup.addEventListener('click', () => openAuthModal('signup'));
 openLoginBtn.addEventListener('click', () => openAuthModal('login'));
@@ -370,7 +455,7 @@ searchInput.addEventListener('input', () => {
 });
 
 // --- Event Listeners ---
-closeButton.addEventListener('click', deselectDestination);
+closeButton.addEventListener('click', handleBackNavigation);
 
 // Click delegation for all landmark cards
 cardsContainer.addEventListener('click', (e) => {
@@ -460,3 +545,21 @@ transcriptToggle.addEventListener('click', () => {
 
 // Initialize Auth State on load
 updateAuthUI();
+
+// Restore view from URL hash on direct link or refresh
+window.addEventListener('DOMContentLoaded', () => {
+  const hash = window.location.hash;
+  if (hash && hash !== '#auth' && hash !== '#destinationsSection') {
+    const cleanHash = hash.replace('#', '').toLowerCase();
+    const cards = Array.from(document.querySelectorAll('.place-card:not(.search-preview-card)'));
+    const matched = cards.find(c => {
+      const slug = (c.dataset.place || '').toLowerCase().replace(/[^a-z0-9]+/g, '-');
+      return slug === cleanHash || (c.dataset.place || '').toLowerCase() === cleanHash;
+    });
+    if (matched) {
+      selectDestination(matched.dataset.place, matched.dataset.image, matched, false);
+    }
+  } else if (hash === '#auth') {
+    openAuthModal('login', false);
+  }
+});
