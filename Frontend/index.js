@@ -478,8 +478,8 @@ function setLandingAuthMode(mode = 'login') {
     }
     if (landingNameGroup) landingNameGroup.classList.add('hidden');
     if (landingAuthTitle) landingAuthTitle.textContent = 'Sign In to Explore';
-    if (landingAuthSub) landingAuthSub.textContent = 'Unlock all 28 destinations & personalized AI guides';
-    if (landingAuthSubmitBtn) landingAuthSubmitBtn.textContent = 'Log In to Unlock Destinations';
+    if (landingAuthSub) landingAuthSub.textContent = 'Explore all 28 destinations & personalized AI guides';
+    if (landingAuthSubmitBtn) landingAuthSubmitBtn.textContent = 'Log In to Explore Destinations';
     if (landingAuthSwitchPrompt) {
       landingAuthSwitchPrompt.innerHTML = 'Don\'t have an account? <button id="landingAuthSwitchBtn" type="button" class="text-[#ff8a1f] font-bold hover:underline">Sign Up</button>';
       const newSwitch = document.getElementById('landingAuthSwitchBtn');
