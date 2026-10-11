@@ -109,6 +109,7 @@ const transcriptContent = document.getElementById('transcriptContent');
 const transcriptArrow = document.getElementById('transcriptArrow');
 
 // Auth DOM Elements
+const headerSearchGroup = document.getElementById('headerSearchGroup');
 const authNavButtons = document.getElementById('authNavButtons');
 const userProfileBadge = document.getElementById('userProfileBadge');
 const userNameDisplay = document.getElementById('userNameDisplay');
@@ -116,6 +117,28 @@ const logoutBtn = document.getElementById('logoutBtn');
 const openLoginBtn = document.getElementById('openLoginBtn');
 const openSignupBtn = document.getElementById('openSignupBtn');
 const heroLoginBtn = document.getElementById('heroLoginBtn');
+
+// Landing Auth Elements
+const landingAuthCard = document.getElementById('landingAuthCard');
+const landingWelcomeCard = document.getElementById('landingWelcomeCard');
+const welcomeUserName = document.getElementById('welcomeUserName');
+const landingTabLogin = document.getElementById('landingTabLogin');
+const landingTabSignup = document.getElementById('landingTabSignup');
+const landingAuthForm = document.getElementById('landingAuthForm');
+const landingNameGroup = document.getElementById('landingNameGroup');
+const landingAuthName = document.getElementById('landingAuthName');
+const landingAuthEmail = document.getElementById('landingAuthEmail');
+const landingAuthPassword = document.getElementById('landingAuthPassword');
+const landingAuthSubmitBtn = document.getElementById('landingAuthSubmitBtn');
+const landingAuthAlert = document.getElementById('landingAuthAlert');
+const landingAuthSwitchBtn = document.getElementById('landingAuthSwitchBtn');
+const landingAuthSwitchPrompt = document.getElementById('landingAuthSwitchPrompt');
+const landingAuthTitle = document.getElementById('landingAuthTitle');
+const landingAuthSub = document.getElementById('landingAuthSub');
+
+let landingAuthMode = 'login'; // 'login' or 'signup'
+
+// Modal Auth Elements
 const authModal = document.getElementById('authModal');
 const authModalTitle = document.getElementById('authModalTitle');
 const authModalSub = document.getElementById('authModalSub');
@@ -221,12 +244,30 @@ if (brandLogo) {
 // --- Functions ---
 function updateAuthUI() {
   if (state.currentUser) {
+    // Authenticated user state
     authNavButtons.classList.add('hidden');
     userProfileBadge.classList.remove('hidden');
     userNameDisplay.textContent = `👤 ${state.currentUser.name || 'User'}`;
+
+    if (headerSearchGroup) headerSearchGroup.classList.remove('hidden');
+    if (destinationsSection) destinationsSection.classList.remove('hidden');
+
+    if (landingAuthCard) landingAuthCard.classList.add('hidden');
+    if (landingWelcomeCard) {
+      landingWelcomeCard.classList.remove('hidden');
+      if (welcomeUserName) welcomeUserName.textContent = state.currentUser.name || 'Traveler';
+    }
   } else {
+    // Guest (unauthenticated) state: ONLY landing page with login/signup is visible; destinations are hidden
     authNavButtons.classList.remove('hidden');
     userProfileBadge.classList.add('hidden');
+
+    if (headerSearchGroup) headerSearchGroup.classList.add('hidden');
+    if (destinationsSection) destinationsSection.classList.add('hidden');
+    if (experiencePanel) experiencePanel.classList.add('hidden');
+
+    if (landingAuthCard) landingAuthCard.classList.remove('hidden');
+    if (landingWelcomeCard) landingWelcomeCard.classList.add('hidden');
   }
 }
 
@@ -328,32 +369,19 @@ function closeAuthModal() {
   authModal.classList.add('hidden');
 }
 
-// Modal Back & Close Events
-modalBackBtn.addEventListener('click', handleBackNavigation);
-modalCloseBtn.addEventListener('click', handleBackNavigation);
-tabLogin.addEventListener('click', () => openAuthModal('login'));
-tabSignup.addEventListener('click', () => openAuthModal('signup'));
-openLoginBtn.addEventListener('click', () => openAuthModal('login'));
-openSignupBtn.addEventListener('click', () => openAuthModal('signup'));
-heroLoginBtn.addEventListener('click', () => openAuthModal('signup'));
+// Shared Authentication Executor (handles both Landing page form & Modal form)
+async function executeAuth(mode, name, email, password, alertElem, submitBtn) {
+  if (alertElem) alertElem.classList.add('hidden');
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Processing...';
+  }
 
-logoutBtn.addEventListener('click', () => {
-  localStorage.removeItem('travel_user');
-  state.currentUser = null;
-  updateAuthUI();
-});
-
-authForm.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  authAlert.classList.add('hidden');
-  authSubmitBtn.disabled = true;
-  authSubmitBtn.textContent = 'Processing...';
-
-  const endpoint = authMode === 'signup' ? '/api/signup' : '/api/login';
+  const endpoint = mode === 'signup' ? '/api/signup' : '/api/login';
   const payload = {
-    email: authEmail.value,
-    password: authPassword.value,
-    ...(authMode === 'signup' && { name: authName.value })
+    email: (email || '').trim(),
+    password: password || '',
+    ...(mode === 'signup' && { name: (name || '').trim() })
   };
 
   try {
@@ -367,15 +395,162 @@ authForm.addEventListener('submit', async (e) => {
     localStorage.setItem('travel_user', JSON.stringify(data.user));
     updateAuthUI();
     closeAuthModal();
-    alert(`Success! Welcome ${data.user.name}`);
 
+    // Smoothly reveal and scroll down to the destinations section
+    setTimeout(() => {
+      if (destinationsSection) {
+        destinationsSection.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 250);
+
+    return data;
   } catch (err) {
-    authAlert.textContent = err.message;
-    authAlert.className = 'text-xs text-center py-2 px-3 rounded-lg bg-red-50 text-red-600 border border-red-200 block';
+    if (alertElem) {
+      alertElem.textContent = err.message;
+      alertElem.className = 'text-xs text-center py-2 px-3 rounded-lg bg-red-50 text-red-600 border border-red-200 block';
+    } else {
+      alert(err.message);
+    }
+    throw err;
   } finally {
-    authSubmitBtn.disabled = false;
-    authSubmitBtn.textContent = authMode === 'signup' ? 'Sign Up' : 'Log In';
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = mode === 'signup' ? 'Sign Up' : 'Log In';
+    }
   }
+}
+
+// Landing Auth Tab Switching
+function setLandingAuthMode(mode = 'login') {
+  landingAuthMode = mode;
+  if (landingAuthAlert) landingAuthAlert.classList.add('hidden');
+
+  if (mode === 'login') {
+    if (landingTabLogin) {
+      landingTabLogin.classList.add('border-[#ff8a1f]', 'text-[#ff8a1f]');
+      landingTabLogin.classList.remove('border-transparent', 'text-gray-400');
+    }
+    if (landingTabSignup) {
+      landingTabSignup.classList.remove('border-[#ff8a1f]', 'text-[#ff8a1f]');
+      landingTabSignup.classList.add('border-transparent', 'text-gray-400');
+    }
+    if (landingNameGroup) landingNameGroup.classList.add('hidden');
+    if (landingAuthTitle) landingAuthTitle.textContent = 'Sign In to Explore';
+    if (landingAuthSub) landingAuthSub.textContent = 'Unlock all 28 destinations & personalized AI guides';
+    if (landingAuthSubmitBtn) landingAuthSubmitBtn.textContent = 'Log In to Unlock Destinations';
+    if (landingAuthSwitchPrompt) {
+      landingAuthSwitchPrompt.innerHTML = 'Don\'t have an account? <button id="landingAuthSwitchBtn" type="button" class="text-[#ff8a1f] font-bold hover:underline">Sign Up</button>';
+      const newSwitch = document.getElementById('landingAuthSwitchBtn');
+      if (newSwitch) newSwitch.addEventListener('click', () => setLandingAuthMode('signup'));
+    }
+  } else {
+    if (landingTabSignup) {
+      landingTabSignup.classList.add('border-[#ff8a1f]', 'text-[#ff8a1f]');
+      landingTabSignup.classList.remove('border-transparent', 'text-gray-400');
+    }
+    if (landingTabLogin) {
+      landingTabLogin.classList.remove('border-[#ff8a1f]', 'text-[#ff8a1f]');
+      landingTabLogin.classList.add('border-transparent', 'text-gray-400');
+    }
+    if (landingNameGroup) landingNameGroup.classList.remove('hidden');
+    if (landingAuthTitle) landingAuthTitle.textContent = 'Create an Account';
+    if (landingAuthSub) landingAuthSub.textContent = 'Get free instant access to all 28 worldwide audio guides';
+    if (landingAuthSubmitBtn) landingAuthSubmitBtn.textContent = 'Sign Up & Start Exploring';
+    if (landingAuthSwitchPrompt) {
+      landingAuthSwitchPrompt.innerHTML = 'Already have an account? <button id="landingAuthSwitchBtn" type="button" class="text-[#ff8a1f] font-bold hover:underline">Log In</button>';
+      const newSwitch = document.getElementById('landingAuthSwitchBtn');
+      if (newSwitch) newSwitch.addEventListener('click', () => setLandingAuthMode('login'));
+    }
+  }
+}
+
+if (landingTabLogin) landingTabLogin.addEventListener('click', () => setLandingAuthMode('login'));
+if (landingTabSignup) landingTabSignup.addEventListener('click', () => setLandingAuthMode('signup'));
+if (landingAuthSwitchBtn) {
+  landingAuthSwitchBtn.addEventListener('click', () => {
+    setLandingAuthMode(landingAuthMode === 'login' ? 'signup' : 'login');
+  });
+}
+
+// Landing Auth Form Submit
+if (landingAuthForm) {
+  landingAuthForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    try {
+      await executeAuth(
+        landingAuthMode,
+        landingAuthName ? landingAuthName.value : '',
+        landingAuthEmail ? landingAuthEmail.value : '',
+        landingAuthPassword ? landingAuthPassword.value : '',
+        landingAuthAlert,
+        landingAuthSubmitBtn
+      );
+    } catch (err) {}
+  });
+}
+
+// Modal Form Submit
+if (authForm) {
+  authForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    try {
+      await executeAuth(
+        authMode,
+        authName ? authName.value : '',
+        authEmail ? authEmail.value : '',
+        authPassword ? authPassword.value : '',
+        authAlert,
+        authSubmitBtn
+      );
+    } catch (err) {}
+  });
+}
+
+// Modal Back & Close Events
+modalBackBtn.addEventListener('click', handleBackNavigation);
+modalCloseBtn.addEventListener('click', handleBackNavigation);
+tabLogin.addEventListener('click', () => openAuthModal('login'));
+tabSignup.addEventListener('click', () => openAuthModal('signup'));
+
+// Header & Hero Navigation Buttons
+if (openLoginBtn) {
+  openLoginBtn.addEventListener('click', () => {
+    if (!state.currentUser && landingAuthCard) {
+      setLandingAuthMode('login');
+      landingAuthCard.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      openAuthModal('login');
+    }
+  });
+}
+
+if (openSignupBtn) {
+  openSignupBtn.addEventListener('click', () => {
+    if (!state.currentUser && landingAuthCard) {
+      setLandingAuthMode('signup');
+      landingAuthCard.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      openAuthModal('signup');
+    }
+  });
+}
+
+if (heroLoginBtn) {
+  heroLoginBtn.addEventListener('click', () => {
+    if (!state.currentUser && landingAuthCard) {
+      setLandingAuthMode('signup');
+      landingAuthCard.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      openAuthModal('signup');
+    }
+  });
+}
+
+logoutBtn.addEventListener('click', () => {
+  localStorage.removeItem('travel_user');
+  state.currentUser = null;
+  updateAuthUI();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 });
 
 // --- Continent & Category Filter Logic ---
