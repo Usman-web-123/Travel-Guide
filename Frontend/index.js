@@ -738,3 +738,44 @@ window.addEventListener('DOMContentLoaded', () => {
     openAuthModal('login', false);
   }
 });
+
+// FAQ Accordion Toggle
+document.querySelectorAll('.faq-toggle').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const content = btn.nextElementSibling;
+    const icon = btn.querySelector('.faq-icon');
+    const isHidden = content.classList.contains('hidden');
+
+    // Close other FAQ items
+    document.querySelectorAll('.faq-content').forEach(c => c.classList.add('hidden'));
+    document.querySelectorAll('.faq-icon').forEach(i => i.textContent = '+');
+
+    if (isHidden) {
+      content.classList.remove('hidden');
+      if (icon) icon.textContent = '−';
+    }
+  });
+});
+
+// Preview Section CTA Buttons & Cards
+document.querySelectorAll('.preview-cta-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    if (!state.currentUser && landingAuthCard) {
+      setLandingAuthMode('signup');
+      landingAuthCard.scrollIntoView({ behavior: 'smooth' });
+    } else if (destinationsSection) {
+      destinationsSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  });
+});
+
+document.querySelectorAll('.preview-card').forEach(card => {
+  card.addEventListener('click', () => {
+    if (!state.currentUser && landingAuthCard) {
+      setLandingAuthMode('signup');
+      landingAuthCard.scrollIntoView({ behavior: 'smooth' });
+    } else if (destinationsSection) {
+      destinationsSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  });
+});
